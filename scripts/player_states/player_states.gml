@@ -17,31 +17,50 @@ function player_state_ground(){
 	
 	
 	horizontal_movement();
+	
+	if (input_check("run")) {
+		run_multiplier_current = run_multiplier;
+	} else run_multiplier_current = 1;
+	
+	if (input_check("down")) {
+		crouch_multiplier_current = crouch_multiplier;
+	} else crouch_multiplier_current = 1;
+	
+	
 	//sprite switching
 	if (sprite_index = spr_land && abs(x_vel_current) > 1) set_sprite(spr_idle,true);
 	if (animation_end() && sprite_index = spr_land) set_sprite(spr_idle,true);
 	
-	if (sprite_index != spr_land) {		
-		if (xinput != 0 && x_vel_current != 0) {
-			set_sprite(spr_walk,false);
-			image_speed = abs(x_vel_current)/x_vel_max;
-			if (sign(xinput) != sign(x_vel_current)) set_state(player_state_slide);
+	
+	if (sprite_index != spr_land) {
+		if (xinput = 0) {
+			if (abs(x_vel_current) > walk_speed_standard) set_state(player_state_skid);
+			if (input_check("down")) {
+				set_sprite(spr_crouch);
+			} else set_sprite(spr_idle);
 		} else {
-			if (x_vel_current != 0 && !place_meeting(x,y+1,obj_conveyor)) {
-				set_state(player_state_slide);
+			if (sign(xinput) != sign(x_vel_current) && abs(x_vel_current) > walk_speed_standard) set_state(player_state_skid);
+			if (input_check("down")) {
+				set_sprite(spr_crouch_walk);
+				image_speed = abs(x_vel_current)/crouch_step_size;//abs(x_vel_current*3)/x_vel_max;//1.8 pixels per frame movement
 			} else {
-				image_speed = 1;
-				set_sprite(spr_idle,false);
+				set_sprite(spr_walk);
+				image_speed = abs(x_vel_current)/walk_step_size;
 			}
 		}
+		
 	}
+	
+	
 	//vertical movement	
 	if (jump_buffer > 0) {
 		y_vel_current = -jump_height_current;	
 		set_state(player_state_jump);
 	}
+	
 	jump_buffer = 0;
 	can_jump = coyote_time;
+	multijump_current = multijump_max;
 		
 	if (input_check_pressed("jump")) {
 		if (place_meeting(x,y+1,obj_oneway) && input_check("down")) {
@@ -56,11 +75,10 @@ function player_state_ground(){
 	if (place_meeting(x,y,obj_ladder) && input_check("up")) {
 		set_state(player_state_ladder);	
 	}
-	wall_dir = xinput;
-}
-
-function player_state_walk() {
 	
+	if (!on_ground()) set_state(player_state_air);
+	
+	wall_dir = xinput;
 }
 
 function player_state_jump() {
@@ -122,6 +140,9 @@ function player_state_air() {
 			can_jump = 0;
 		} else if (place_meeting(x,y+(y_vel_current*coyote_time),par_solid)) {
 			jump_buffer = coyote_time;
+		} else if (multijump_current > 0) {
+			y_vel_current = -jump_height_current;
+			multijump_current--;
 		}
 	}
 	can_jump--;
@@ -137,11 +158,9 @@ function player_state_air() {
 		set_state(player_state_ladder);	
 	}
 	
-	if (place_meeting(x,y+1,par_solid)) {
-		set_state(player_state_ground);	
+	if (on_ground()) {
+		set_state(player_state_ground);
 	}
-	
-	
 		
 }
 
@@ -206,20 +225,20 @@ function player_state_ladder() {
 		image_index += _yinput;
 }
 
-function player_state_slide() {
-	if (state_previous != player_state_slide) {
-		slide_dir = x_vel_current;
-		set_sprite(spr_slide,true);
+function player_state_skid() {
+	if (state_previous != player_state_skid) {
+		skid_dir = x_vel_current;
+		set_sprite(spr_skid,true);
 		braking_multiplier = 2;
 		sticky_current = sticky_max;
-		state_previous = player_state_slide;
+		state_previous = player_state_skid;
 	}
 	
 	if (animation_end()) image_speed = 0;
 	
 	x_vel_current = approach(x_vel_current,0,acceleration_current*braking_current*resistance_current*friction_current);
 	
-	if (on_ground() && ((slide_dir < 0 && x_vel_current >= 0) || (slide_dir > 0 && x_vel_current <= 0))) set_state(player_state_ground);
+	if (on_ground() && ((skid_dir < 0 && x_vel_current >= 0) || (skid_dir > 0 && x_vel_current <= 0))) set_state(player_state_ground);
 	
 	if (!on_ground()) set_state(player_state_air);
 	

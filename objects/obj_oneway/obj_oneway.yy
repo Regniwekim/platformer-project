@@ -27,7 +27,10 @@
   "physicsStartAwake": true,
   "properties": [],
   "solid": false,
-  "spriteId": null,
+  "spriteId": {
+    "name": "spr_oneway",
+    "path": "sprites/spr_oneway/spr_oneway.yy",
+  },
   "spriteMaskId": null,
   "visible": true,
 }

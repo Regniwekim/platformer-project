@@ -4,10 +4,16 @@ spr_jump = spr_player_jump;
 spr_fall = spr_player_fall;
 spr_ladder = spr_player_jump;
 spr_slide = spr_player_slide;
+spr_skid = spr_player_skid;
 spr_walk = spr_player_walk;
 spr_land = spr_player_land;
 spr_wall_slide = spr_player_wall_slide;
 spr_wall_land = spr_player_wall_land;
+spr_crouch = spr_player_crouch_idle;
+spr_crouch_walk = spr_player_crouch_walk;
+
+crouch_step_size = 1.8;
+walk_step_size = 9;
 
 active = true;
 
@@ -17,9 +23,12 @@ yinput = 0;
 air_resistance = 0.75;
 water_resistance = 0.5;	
 
-walk_speed_standard = 5;
+walk_speed_standard = 3;
 walk_speed_multiplier = 1;
-run_multiplier = 1.5;
+run_multiplier = 2;
+run_multiplier_current = 1;
+crouch_multiplier = 0.33;
+crouch_multiplier_current = 1;
 walk_speed_current = walk_speed_standard*walk_speed_multiplier;
 
 acceleration_standard = 0.2; //0.046875????
@@ -60,6 +69,9 @@ jump_height_current = jump_height_standard*jump_height_multiplier;
 coyote_time = 6;
 can_jump = coyote_time;
 jump_buffer = 0;
+multijump_current = 1;
+multijump_max = 1;
+
 sticky_current = 4;
 sticky_max = sticky_current;
 
@@ -70,6 +82,7 @@ mask_index = spr_player_mask;
 radius = sprite_get_width(mask_index)/2;
 slope = 0;
 slide_dir = 0;
+oneway = 0;
 
 can_wall_jump = 1;
 wall_dir = facing;

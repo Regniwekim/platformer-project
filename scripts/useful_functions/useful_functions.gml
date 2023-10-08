@@ -25,24 +25,7 @@ function set_sprite(_sprite,_anim_reset = false,_image_speed = 1) {
 	image_speed = _image_speed;
 }
 
-function set_state(_state) {
-	//execute state leave
-	//state enter script 
-	if (state != _state) {
-		state_previous = state;
-		state = _state;
-	}
-}
 
-function on_ground() {
-	return (place_meeting(x,y+1,par_solid) || (place_meeting(x,y+1,obj_oneway) && !place_meeting(x,y,obj_oneway)));
-}
-
-function is_state() {
-	for (var i=0;i<argument_count;i++) {
-		if (state = argument[i]) return true;
-	}
-}
 
 function draw_text_stroke(_x,_y,_string,_stroke_color = c_black,_stroke_width = 1,_text_color = c_white) {
 	
