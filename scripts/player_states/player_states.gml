@@ -34,18 +34,18 @@ function player_state_ground(){
 	
 	if (sprite_index != spr_land) {
 		if (xinput = 0) {
-			if (abs(x_vel_current) > walk_speed_standard) set_state(player_state_skid);
+			if (abs(x_vel_current) >= walk_speed_standard) set_state(player_state_skid);
 			if (input_check("down")) {
 				set_sprite(spr_crouch);
-			} else set_sprite(spr_idle);
+			} else set_sprite(spr_idle,false,1);
 		} else {
-			if (sign(xinput) != sign(x_vel_current) && abs(x_vel_current) > walk_speed_standard) set_state(player_state_skid);
+			if (sign(xinput) != sign(x_vel_current) && abs(x_vel_current) >= walk_speed_standard) set_state(player_state_skid);
 			if (input_check("down")) {
-				set_sprite(spr_crouch_walk);
-				image_speed = abs(x_vel_current)/crouch_step_size;//abs(x_vel_current*3)/x_vel_max;//1.8 pixels per frame movement
+				set_sprite(spr_crouch_walk,false,abs(x_vel_current)/crouch_step_size);
+				//image_speed = abs(x_vel_current)/crouch_step_size;//abs(x_vel_current*3)/x_vel_max;//1.8 pixels per frame movement
 			} else {
-				set_sprite(spr_walk);
-				image_speed = abs(x_vel_current)/walk_step_size;
+				set_sprite(spr_walk,false,abs(x_vel_current)/walk_step_size);
+				//image_speed = abs(x_vel_current)/walk_step_size;
 			}
 		}
 		

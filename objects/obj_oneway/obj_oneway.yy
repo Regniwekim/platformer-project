@@ -32,5 +32,5 @@
     "path": "sprites/spr_oneway/spr_oneway.yy",
   },
   "spriteMaskId": null,
-  "visible": true,
+  "visible": false,
 }

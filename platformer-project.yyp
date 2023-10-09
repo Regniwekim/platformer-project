@@ -1,7 +1,7 @@
 {
   "resourceType": "GMProject",
   "resourceVersion": "1.7",
-  "name": "puzzle-platformer",
+  "name": "platformer-project",
   "AudioGroups": [
     {"resourceType":"GMAudioGroup","resourceVersion":"1.3","name":"audiogroup_default","targets":-1,},
   ],
@@ -328,6 +328,7 @@
     {"id":{"name":"spr_oneway","path":"sprites/spr_oneway/spr_oneway.yy",},},
     {"id":{"name":"input_player_ghost_set","path":"scripts/input_player_ghost_set/input_player_ghost_set.yy",},},
     {"id":{"name":"__input_load_blacklist_csv","path":"scripts/__input_load_blacklist_csv/__input_load_blacklist_csv.yy",},},
+    {"id":{"name":"spr_wooden_oneway","path":"sprites/spr_wooden_oneway/spr_wooden_oneway.yy",},},
     {"id":{"name":"input_player_connected","path":"scripts/input_player_connected/input_player_connected.yy",},},
     {"id":{"name":"input_virtual_destroy_all","path":"scripts/input_virtual_destroy_all/input_virtual_destroy_all.yy",},},
     {"id":{"name":"input_player_ghost_get","path":"scripts/input_player_ghost_get/input_player_ghost_get.yy",},},
@@ -407,6 +408,7 @@
     {"id":{"name":"input_profile_auto","path":"scripts/input_profile_auto/input_profile_auto.yy",},},
     {"id":{"name":"__input_class_trigger_effect_off","path":"scripts/__input_class_trigger_effect_off/__input_class_trigger_effect_off.yy",},},
     {"id":{"name":"spr_player_crouch_idle","path":"sprites/spr_player_crouch_idle/spr_player_crouch_idle.yy",},},
+    {"id":{"name":"til_wooden_oneway","path":"tilesets/til_wooden_oneway/til_wooden_oneway.yy",},},
     {"id":{"name":"input_vibrate_set_pause","path":"scripts/input_vibrate_set_pause/input_vibrate_set_pause.yy",},},
     {"id":{"name":"input_is_virtual","path":"scripts/input_is_virtual/input_is_virtual.yy",},},
     {"id":{"name":"input_icon_not_a_binding","path":"scripts/input_icon_not_a_binding/input_icon_not_a_binding.yy",},},
