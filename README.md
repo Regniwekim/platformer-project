@@ -1,4 +1,4 @@
-# puzzle-platformer
+# platformer-project
  A platformer I am building in Gamemaker
 
 # Credits
