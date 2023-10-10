@@ -32,8 +32,8 @@
   ],
   "solid": false,
   "spriteId": {
-    "name": "spr_wooden_oneway",
-    "path": "sprites/spr_wooden_oneway/spr_wooden_oneway.yy",
+    "name": "spr_oneway_digital",
+    "path": "sprites/spr_oneway_digital/spr_oneway_digital.yy",
   },
   "spriteMaskId": null,
   "visible": true,
