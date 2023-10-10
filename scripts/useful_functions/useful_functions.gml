@@ -5,6 +5,7 @@
 /// @param {real} _start the starting value
 /// @param {real} _end the ending value
 /// @param {real} _shift the amount to shift start to end
+
 function approach(_start, _end, _shift){
 	if (_start < _end) {
 		return min(_start + _shift, _end);	
@@ -24,8 +25,6 @@ function set_sprite(_sprite,_anim_reset = false,_image_speed = 1) {
 	}
 	image_speed = _image_speed;
 }
-
-
 
 function draw_text_stroke(_x,_y,_string,_stroke_color = c_black,_stroke_width = 1,_text_color = c_white) {
 	

@@ -61,6 +61,10 @@ function horizontal_movement() {
 	x_vel_current = approach(x_vel_current,walk_speed_current*xinput*resistance_current*run_multiplier_current*crouch_multiplier_current,acceleration_current*braking_current*resistance_current*friction_current);
 }
 
+function vertical_movement() {
+	y_vel_current = approach(y_vel_current, y_vel_max * gravity_multiplier, gravity_current);
+}
+
 function set_state(_state) {
 	//execute state leave
 	//state enter script 
@@ -92,4 +96,47 @@ function on_oneway() {
 	if _on_oneway == _inside_oneway return noone;
 	
 	return _on_oneway;
+}
+
+function player_input_jump() {		
+	if (input_check_pressed("jump")) { //drop through one way
+		if (place_meeting(x,y+1,obj_oneway) && input_check("down")) {
+			y++;
+			set_state(player_state_air);
+		}
+		
+		else if (can_jump > 0) { //jump and coyote jump
+		y_vel_current = -jump_height_current;
+		set_state(player_state_jump);
+			
+		} else if (place_meeting(x,y+(y_vel_current*coyote_time),par_solid) && y_vel_current > 0) { //jump buffer
+			jump_buffer = coyote_time;
+	
+		} else if (multijump_current > 0) { //multijump
+			if (sprite_index != spr_air_jump) {
+				set_sprite(spr_air_jump,true,0.5);	
+			}
+			y_vel_current = -jump_height_current;
+			multijump_current--;
+			set_state(player_state_jump);
+			
+		} else if (glider_unlocked) {
+			set_state(player_state_glide);
+		}
+		
+	}else if (input_check("jump") && can_jump <= 0 && multijump_current <= 0 && !place_meeting(x,y+(y_vel_current*coyote_time),par_solid) && y_vel_current >= 0 && glider_unlocked) {
+		set_state(player_state_glide);	
+	}
+}
+
+function player_input_walljump() {
+	if (walljump_unlocked && ((place_meeting(x+1,y,par_solid) && input_check("right")) || (place_meeting(x-1,y,par_solid) && input_check("left")))) {
+		set_state(player_state_cling);	
+	}	
+}
+
+function player_input_ladder() {
+	if (place_meeting(x,y,obj_ladder) && input_check("up")) {
+		set_state(player_state_ladder);	
+	}	
 }

@@ -2,18 +2,24 @@ function player_create() {
 spr_idle = spr_player_idle;
 spr_jump = spr_player_jump;
 spr_fall = spr_player_fall;
+spr_air_jump = spr_player_air_jump;
+spr_glide = spr_player_air_jump;
 spr_ladder = spr_player_jump;
 spr_slide = spr_player_slide;
 spr_skid = spr_player_skid;
 spr_walk = spr_player_walk;
+spr_run = spr_player_run;
 spr_land = spr_player_land;
 spr_wall_slide = spr_player_wall_slide;
 spr_wall_land = spr_player_wall_land;
 spr_crouch = spr_player_crouch_idle;
 spr_crouch_walk = spr_player_crouch_walk;
 
-crouch_step_size = 1.8;
-walk_step_size = 9;
+//number of pixels covered per step divided by the number of frames per step = pixels moved per frame at image_speed = 1
+crouch_step_size = 19/6;
+run_step_size = 18/2;
+walk_step_size = 13/5;
+step_size = sprite_get_width(sprite_index)/image_number;
 
 active = true;
 
@@ -23,9 +29,9 @@ yinput = 0;
 air_resistance = 0.75;
 water_resistance = 0.5;	
 
-walk_speed_standard = 3;
+walk_speed_standard = 2;
 walk_speed_multiplier = 1;
-run_multiplier = 2;
+run_multiplier = 3;
 run_multiplier_current = 1;
 crouch_multiplier = 0.33;
 crouch_multiplier_current = 1;
@@ -69,8 +75,13 @@ jump_height_current = jump_height_standard*jump_height_multiplier;
 coyote_time = 6;
 can_jump = coyote_time;
 jump_buffer = 0;
-multijump_current = 1;
-multijump_max = 1;
+multijump_current = 0;
+multijump_max = 0;
+
+walljump_unlocked = 0;
+dash_unlocked = 0;
+glider_unlocked = 0;
+grapple_hook_unlocked = 0;
 
 sticky_current = 4;
 sticky_max = sticky_current;
@@ -95,4 +106,23 @@ echo_facing = facing;
 
 state = player_state_ground;
 state_previous = state;
+
+view_width = 1920/3;
+view_height = 1080/3;
+
+global.camera = instance_create_layer(x,y,"lay_entities",obj_camera,
+{
+	view_width : 1920/3,
+	view_height : 1080/3,
+	target_x : clamp(x - (other.view_width/2) + (x_vel_current*3) + (facing*32) ,0,room_width-other.view_width),
+	current_x : camera_get_view_x(view),
+	target_y : clamp(y - (other.view_height/2),0,room_height-other.view_height),
+	current_y : camera_get_view_y(view),
+	camera_speed : 0.1
+});
+
+with (global.camera) {
+	camera_set_view_pos(view,target_x,target_y);
+}
+
 }
