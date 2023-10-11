@@ -103,7 +103,6 @@
     {"id":{"name":"input_verb_consume","path":"scripts/input_verb_consume/input_verb_consume.yy",},},
     {"id":{"name":"input_mouse_check","path":"scripts/input_mouse_check/input_mouse_check.yy",},},
     {"id":{"name":"til_stone","path":"tilesets/til_stone/til_stone.yy",},},
-    {"id":{"name":"part_sys_fan_dust","path":"particles/part_sys_fan_dust/part_sys_fan_dust.yy",},},
     {"id":{"name":"spr_player_air_jump","path":"sprites/spr_player_air_jump/spr_player_air_jump.yy",},},
     {"id":{"name":"input_check_opposing","path":"scripts/input_check_opposing/input_check_opposing.yy",},},
     {"id":{"name":"input_binding_set_safe","path":"scripts/input_binding_set_safe/input_binding_set_safe.yy",},},

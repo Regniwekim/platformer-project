@@ -17,8 +17,8 @@ if (instance_exists(obj_player)) {
 if (place_meeting(x + x_vel, y, obj_platform_stop) || place_meeting(x + x_vel, y, par_solid)) x_vel *= -1;
 
 if (place_meeting(x, y + y_vel, obj_platform_stop) || place_meeting(x, y + y_vel, par_solid)) {
-	if (instance_exists(obj_player) && place_meeting(x,y-1,obj_player) && !place_meeting(x,y,obj_player)) {
-		obj_player.y -= sign(y_vel)*2;	
+	if (instance_exists(obj_player) && place_meeting(x,y-1,obj_player)) {
+		obj_player.y -= sign(y_vel)*2;
 	}
 	y_vel *= -1;
 }
