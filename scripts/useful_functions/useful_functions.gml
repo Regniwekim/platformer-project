@@ -23,7 +23,7 @@ function set_sprite(_sprite,_anim_reset = false,_image_speed = 1) {
 	if (_anim_reset) {
 		image_index = 0;
 	}
-	image_speed = _image_speed;
+	image_speed = _image_speed * global.time_dilation_current;
 }
 
 function draw_text_stroke(_x,_y,_string,_stroke_color = c_black,_stroke_width = 1,_text_color = c_white) {
@@ -36,4 +36,8 @@ function draw_text_stroke(_x,_y,_string,_stroke_color = c_black,_stroke_width = 
 	}
 	draw_set_color(_text_color);
 	draw_text(_x,_y,_string);
+}
+
+function in_view() {
+	return (bbox_right > camera_get_view_x(view) && bbox_left < camera_get_view_x(view)+global.view_width && bbox_bottom > camera_get_view_y(view) && bbox_top < camera_get_view_y(view) + global.view_height);
 }

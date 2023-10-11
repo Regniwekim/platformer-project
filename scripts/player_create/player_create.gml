@@ -76,12 +76,6 @@ coyote_time = 6;
 can_jump = coyote_time;
 jump_buffer = 0;
 multijump_current = 0;
-multijump_max = 0;
-
-walljump_unlocked = 0;
-dash_unlocked = 0;
-glider_unlocked = 0;
-grapple_hook_unlocked = 0;
 
 sticky_current = 4;
 sticky_max = sticky_current;
@@ -95,7 +89,6 @@ slope = 0;
 slide_dir = 0;
 oneway = 0;
 
-can_wall_jump = 1;
 wall_dir = facing;
 
 echo_x = x;
@@ -106,23 +99,5 @@ echo_facing = facing;
 
 state = player_state_ground;
 state_previous = state;
-
-view_width = 1920/3;
-view_height = 1080/3;
-
-global.camera = instance_create_layer(x,y,"lay_entities",obj_camera,
-{
-	view_width : 1920/3,
-	view_height : 1080/3,
-	target_x : clamp(x - (other.view_width/2) + (x_vel_current*3) + (facing*32) ,0,room_width-other.view_width),
-	current_x : camera_get_view_x(view),
-	target_y : clamp(y - (other.view_height/2),0,room_height-other.view_height),
-	current_y : camera_get_view_y(view),
-	camera_speed : 0.1
-});
-
-with (global.camera) {
-	camera_set_view_pos(view,target_x,target_y);
-}
 
 }

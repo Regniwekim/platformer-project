@@ -3,7 +3,7 @@
 
 audio_play_sound(snd_powerup,0,false);
 
-multijump_max++;
+global.multijump_max++;
 
 with (other) instance_destroy();
 

@@ -39,8 +39,8 @@ function __input_transform_coordinate(_x, _y, _input_system, _output_system, _ca
             {
                 var _viewX = camera_get_view_x(     _camera);
                 var _viewY = camera_get_view_y(     _camera);
-                var _viewW = camera_get_view_width( _camera);
-                var _viewH = camera_get_view_height(_camera);
+                var _viewW = camera_get_global.global.view_width( _camera);
+                var _viewH = camera_get_global.global.view_width(_camera);
                 var _viewA = camera_get_view_angle( _camera);
             }
             else

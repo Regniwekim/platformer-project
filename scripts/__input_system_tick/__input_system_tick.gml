@@ -205,8 +205,8 @@ function __input_system_tick()
                                 if (view_enabled && view_visible[0])
                                 {
                                     var _camera = view_camera[0];
-                                    var _old_x = camera_get_view_width(_camera)/2;
-                                    var _old_y = camera_get_view_height(_camera)/2;
+                                    var _old_x = camera_get_global.global.view_width(_camera)/2;
+                                    var _old_y = camera_get_global.global.view_width(_camera)/2;
                                 }
                                 else
                                 {

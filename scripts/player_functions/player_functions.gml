@@ -58,11 +58,11 @@ y += y_vel_current;
 }
 
 function horizontal_movement() {
-	x_vel_current = approach(x_vel_current,walk_speed_current*xinput*resistance_current*run_multiplier_current*crouch_multiplier_current,acceleration_current*braking_current*resistance_current*friction_current);
+	x_vel_current = approach(x_vel_current,walk_speed_current*xinput*resistance_current*run_multiplier_current*crouch_multiplier_current*global.time_dilation_current,acceleration_current*braking_current*resistance_current*friction_current*global.time_dilation_current);
 }
 
 function vertical_movement() {
-	y_vel_current = approach(y_vel_current, y_vel_max * gravity_multiplier, gravity_current);
+	y_vel_current = approach(y_vel_current, y_vel_max * gravity_multiplier * global.time_dilation_current, gravity_current * global.time_dilation_current);
 }
 
 function set_state(_state) {
@@ -120,17 +120,17 @@ function player_input_jump() {
 			multijump_current--;
 			set_state(player_state_jump);
 			
-		} else if (glider_unlocked) {
+		} else if (global.glider_unlocked) {
 			set_state(player_state_glide);
 		}
 		
-	}else if (input_check("jump") && can_jump <= 0 && multijump_current <= 0 && !place_meeting(x,y+(y_vel_current*coyote_time),par_solid) && y_vel_current >= 0 && glider_unlocked) {
+	}else if (input_check("jump") && can_jump <= 0 && multijump_current <= 0 && !place_meeting(x,y+(y_vel_current*coyote_time),par_solid) && y_vel_current >= 0 && global.glider_unlocked) {
 		set_state(player_state_glide);	
 	}
 }
 
 function player_input_walljump() {
-	if (walljump_unlocked && ((place_meeting(x+1,y,par_solid) && input_check("right")) || (place_meeting(x-1,y,par_solid) && input_check("left")))) {
+	if (global.walljump_unlocked && ((place_meeting(x+1,y,par_solid) && input_check("right")) || (place_meeting(x-1,y,par_solid) && input_check("left")))) {
 		set_state(player_state_cling);	
 	}	
 }

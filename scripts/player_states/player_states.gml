@@ -17,7 +17,7 @@ function player_state_ground() {
 		gravity_multiplier = 1;
 		jump_height_multiplier = 1;
 		sticky_current = sticky_max;
-		multijump_current = multijump_max;
+		multijump_current = global.multijump_max;
 		state_previous = player_state_ground;
 	}	
 	
@@ -79,7 +79,7 @@ function player_state_ground() {
 	
 	jump_buffer = 0;
 	can_jump = coyote_time;
-	multijump_current = multijump_max;
+	multijump_current = global.multijump_max;
 	
 	player_input_jump();
 	
@@ -95,7 +95,7 @@ function player_state_jump() {
 		if (sprite_index != spr_air_jump) {
 			set_sprite(spr_jump,true,1);
 		}
-		if (multijump_current = multijump_max) {
+		if (multijump_current = global.multijump_max) {
 			audio_play_sound(snd_jump1,0,false);
 		} else {
 			audio_play_sound(snd_jump3,0,false);	
@@ -194,15 +194,15 @@ function player_state_glide() {
 		var _fan_zone = instance_place(x,y,obj_fan_zone);
 		if (instance_exists(_fan_zone)) {
 			if (_fan_zone.y_thrust != 0) {
-				y_vel_current = approach(y_vel_current,y_vel_max*sign(_fan_zone.y_thrust),abs(_fan_zone.y_thrust)*acceleration_current);
+				y_vel_current = approach(y_vel_current,y_vel_max*sign(_fan_zone.y_thrust)*global.time_dilation_current,abs(_fan_zone.y_thrust)*acceleration_current*global.time_dilation_current);
 			}
 			if (_fan_zone.x_thrust != 0) {
-				x_vel_current = approach(x_vel_current,x_vel_max*_fan_zone.x_thrust,abs(_fan_zone.x_thrust)*acceleration_current);
+				x_vel_current = approach(x_vel_current,x_vel_max*_fan_zone.x_thrust*global.time_dilation_current,abs(_fan_zone.x_thrust)*acceleration_current*global.time_dilation_current);
 			}
 		}
 	} else {
 		if (y_vel_current < 0) y_vel_current *= 0.85;
-		if (y_vel_current > y_vel_max * gravity_multiplier) y_vel_current = approach(y_vel_current,y_vel_max * gravity_multiplier, gravity_current * 2);
+		if (y_vel_current > y_vel_max * gravity_multiplier) y_vel_current = approach(y_vel_current,y_vel_max * gravity_multiplier * global.time_dilation_current, gravity_current * 2 * global.time_dilation_current);
 	}
 	
 	horizontal_movement();
@@ -233,7 +233,7 @@ function player_state_cling() {
 		gravity_multiplier = 0.15;
 		jump_height_multiplier = 1;
 		sticky_current = sticky_max;
-		multijump_current = multijump_max;
+		multijump_current = global.multijump_max;
 		state_previous = player_state_cling;
 	}
 	
@@ -245,7 +245,7 @@ function player_state_cling() {
 	else wall_dir = -1;
 		
 	if (y_vel_current < 0) y_vel_current *= 0.85;
-	if (y_vel_current > y_vel_max * gravity_multiplier) y_vel_current = approach(y_vel_current,y_vel_max * gravity_multiplier, gravity_current * 2);
+	if (y_vel_current > y_vel_max * gravity_multiplier) y_vel_current = approach(y_vel_current,y_vel_max * gravity_multiplier * global.time_dilation_current, gravity_current * 2 * global.time_dilation_current);
 	
 	if (input_check_pressed("jump")) {
 		x_vel_current = jump_height_current*wall_dir*0.25;
@@ -297,7 +297,7 @@ function player_state_skid() {
 	
 	if (animation_end()) image_speed = 0;
 	
-	x_vel_current = approach(x_vel_current,0,acceleration_current*braking_current*resistance_current*friction_current);
+	x_vel_current = approach(x_vel_current,0,acceleration_current*braking_current*resistance_current*friction_current*global.time_dilation_current);
 	
 	vertical_movement();
 	
@@ -323,7 +323,7 @@ function player_state_slide() {
 	
 	if (animation_end()) image_speed = 0;	
 	
-	x_vel_current = approach(x_vel_current,0,acceleration_current*braking_current*resistance_current*friction_current);
+	x_vel_current = approach(x_vel_current,0,acceleration_current*braking_current*resistance_current*friction_current*global.time_dilation_current);
 	
 	vertical_movement();
 	

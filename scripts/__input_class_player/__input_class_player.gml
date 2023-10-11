@@ -1425,8 +1425,8 @@ function __input_class_player() constructor
                     if (_view_active)
                     {
                         var _camera = view_camera[0];
-                        __gyro_screen_width  = camera_get_view_width(_camera);
-                        __gyro_screen_height = camera_get_view_height(_camera);
+                        __gyro_screen_width  = camera_get_global.global.view_width(_camera);
+                        __gyro_screen_height = camera_get_global.global.view_width(_camera);
                     }
                     else
                     {

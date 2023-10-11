@@ -1,11 +1,4 @@
-/// @description Insert description here
-// You can write your code in this editor
-
-//things that update regardless of state
-
-
-
-//calculate movement
+/// @description Things that update regardless of state
 if (active) {
 	
 	braking_current = braking_standard*braking_multiplier;
@@ -28,10 +21,6 @@ if (active) {
 	step_size = (sprite_get_width(sprite_index)/image_number)*2;
 
 	state();
-	
-	if (keyboard_check_pressed(ord("P"))) {
-		game_set_speed(game_get_speed(gamespeed_fps) == 60 ? 5 : 60,gamespeed_fps);	
-	}
 	
 	entity_collision();
 }
