@@ -1,8 +1,11 @@
 {
   "resourceType": "GMObject",
   "resourceVersion": "1.0",
-  "name": "obj_camera_zone",
-  "eventList": [],
+  "name": "obj_secret_wall",
+  "eventList": [
+    {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":0,"eventType":1,"isDnD":false,},
+    {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":88,"eventType":9,"isDnD":false,},
+  ],
   "managed": true,
   "overriddenProperties": [],
   "parent": {
@@ -10,8 +13,8 @@
     "path": "folders/Objects/Colliders.yy",
   },
   "parentObjectId": {
-    "name": "par_solid",
-    "path": "objects/par_solid/par_solid.yy",
+    "name": "obj_camera_zone",
+    "path": "objects/obj_camera_zone/obj_camera_zone.yy",
   },
   "persistent": false,
   "physicsAngularDamping": 0.1,
@@ -29,9 +32,9 @@
   "properties": [],
   "solid": false,
   "spriteId": {
-    "name": "spr_camera_zone",
-    "path": "sprites/spr_camera_zone/spr_camera_zone.yy",
+    "name": "spr_secret_wall",
+    "path": "sprites/spr_secret_wall/spr_secret_wall.yy",
   },
   "spriteMaskId": null,
-  "visible": false,
+  "visible": true,
 }

@@ -25,6 +25,7 @@ active = true;
 
 xinput = 0;
 yinput = 0;
+aim_dir = 0;
 
 air_resistance = 0.75;
 water_resistance = 0.5;	
@@ -96,6 +97,15 @@ echo_y = y;
 echo_sprite = sprite_index;
 echo_frame = image_index;
 echo_facing = facing;
+
+xscale = image_xscale;
+
+grapple_hook = noone;
+chain_length = 0;
+chain_direction = 0;
+chain_angle_velocity = 0;
+chain_x = x;
+chain_y = y;
 
 state = player_state_ground;
 state_previous = state;

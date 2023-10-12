@@ -19,7 +19,7 @@ return {
 		
 		//in game verbs
 		jump: input_binding_key(vk_space),
-		interact: input_binding_key("E"),
+		grapple: input_binding_key("E"),
 		pause: input_binding_key(vk_escape),
 		run: input_binding_key(vk_shift),
         
@@ -37,7 +37,7 @@ return {
         
         //in game verbs
 		jump:  input_binding_gamepad_button(gp_face1),
-		interact:  input_binding_gamepad_button(gp_face4),
+		grapple:  input_binding_gamepad_button(gp_shoulderr),
 		pause: input_binding_gamepad_button(gp_start),
 		run:  input_binding_gamepad_button(gp_face3),
 		

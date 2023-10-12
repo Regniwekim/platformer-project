@@ -13,14 +13,17 @@ if (active) {
 	//input
 	xinput = input_check("right") - input_check("left");
 	yinput = input_check("down") - input_check("up");
+	aim_dir = point_direction(0,0,xinput,yinput);
 
 	if (xinput != 0) {
-		facing = xinput;	
+		facing = xinput;
 	}
+	
+	xscale = approach(xscale,facing,0.33);
 	
 	step_size = (sprite_get_width(sprite_index)/image_number)*2;
 
 	state();
 	
-	entity_collision();
+	actor_collision();
 }

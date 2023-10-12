@@ -85,6 +85,8 @@ function player_state_ground() {
 	
 	player_input_ladder();
 	
+	player_input_grapple();
+	
 	if (!on_ground()) set_state(player_state_air);
 	
 	wall_dir = xinput;
@@ -126,6 +128,8 @@ function player_state_jump() {
 	player_input_walljump();
 	
 	player_input_ladder();
+	
+	player_input_grapple();
 		
 	can_jump--;
 	jump_buffer--;
@@ -159,6 +163,8 @@ function player_state_air() {
 	player_input_jump();
 	
 	player_input_walljump();
+	
+	player_input_grapple();
 	
 	player_input_ladder();
 	
@@ -213,6 +219,8 @@ function player_state_glide() {
 	
 	player_input_walljump();
 	
+	player_input_grapple();
+	
 	player_input_ladder();
 	
 	can_jump--;
@@ -264,6 +272,8 @@ function player_state_cling() {
 	
 	vertical_movement();
 	
+	player_input_grapple();
+	
 	if (on_ground()) {
 		set_sprite(spr_idle);
 		facing = -facing;
@@ -282,6 +292,10 @@ function player_state_ladder() {
 		can_jump = coyote_time;
 		y_vel_current = _yinput * climb_speed;
 		image_index += _yinput;
+		
+		player_input_grapple();
+		
+		player_input_jump();
 }
 
 function player_state_skid() {
@@ -300,6 +314,10 @@ function player_state_skid() {
 	x_vel_current = approach(x_vel_current,0,acceleration_current*braking_current*resistance_current*friction_current*global.time_dilation_current);
 	
 	vertical_movement();
+	
+	player_input_jump();
+	
+	player_input_grapple();
 	
 	if (on_ground() && ((skid_dir ? x_vel_current <= 0 : x_vel_current >= 0) || (skid_dir ? input_check("right") : input_check("left")))) set_state(player_state_ground);
 	
@@ -329,7 +347,63 @@ function player_state_slide() {
 	
 	player_input_jump();
 	
+	player_input_grapple();
+	
 	if (on_ground() && ((slide_dir ? x_vel_current <= 0 : x_vel_current >= 0) || !input_check("down"))) set_state(player_state_ground);
 	
 	if (!on_ground()) set_state(player_state_air);
+}
+
+function player_state_grapple() {
+	if (state_previous != player_state_grapple) {
+		set_sprite(spr_glide,true,0);
+		image_index = image_number-1;
+		acceleration_multiplier = 1;
+		braking_multiplier = 1;
+		jump_height_multiplier = 1;
+		friction_multiplier = 1;
+		gravity_multiplier = 1;
+		jump_height_multiplier = 1;
+		resistance_multiplier = resistance_standard;
+		sticky_current = sticky_max;
+		chain_length = point_distance(x,y-(sprite_get_height(sprite_index)/2),grapple_hook.x,grapple_hook.y);
+		chain_direction = point_direction(grapple_hook.x,grapple_hook.y,x,y-(sprite_get_height(sprite_index)/2));
+		chain_x = x;
+		chain_y = y;
+		chain_angle_velocity = x_vel_current;
+		state_previous = player_state_grapple;
+	}
+	
+	var _chain_angle_acceleration = -0.2 * dcos(chain_direction);
+	
+	_chain_angle_acceleration += xinput * acceleration_current;
+	
+	chain_length += yinput * 2;
+	chain_angle_velocity += _chain_angle_acceleration;
+	chain_direction += chain_angle_velocity;
+	chain_angle_velocity *= 0.99;
+	
+	chain_x = grapple_hook.x + lengthdir_x(chain_length,chain_direction);
+	chain_y = grapple_hook.y + lengthdir_y(chain_length,chain_direction);
+	
+	x_vel_current = chain_x - x;
+	y_vel_current = chain_y - y;
+	
+	if (input_check_pressed("jump") && multijump_current > 0) {
+		instance_destroy(grapple_hook);
+		y_vel_current = -jump_height_current;
+		multijump_current--;
+		set_state(player_state_jump);
+	}
+	
+	player_input_walljump();
+	
+	
+	if (!input_check("grapple")) {
+		instance_destroy(grapple_hook);
+		set_state(player_state_air);
+	}
+	
+	player_input_ladder();
+	
 }

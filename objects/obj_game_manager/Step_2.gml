@@ -13,11 +13,11 @@ if (global.camera_follow = obj_player) {
 	var _camera_zone_x = collision_line(camera_current_x,obj_player.y-2,camera_current_x+global.view_width,obj_player.y-2,obj_camera_zone,false,false);
 	if (instance_exists(_camera_zone_x)) {
 		camera_target_x = clamp(
-		obj_player.x - (global.view_width/2) + (obj_player.x_vel_current*3) + (obj_player.facing*32),
+		obj_player.x - (global.view_width/2) + (obj_player.x_vel_current*3) + (obj_player.facing*TILE_SIZE),
 		obj_player.x >  _camera_zone_x.bbox_right ?  max(0,_camera_zone_x.bbox_right - TILE_SIZE) : -TILE_SIZE,
 		obj_player.x < _camera_zone_x.bbox_left ? min(room_width,_camera_zone_x.bbox_left+TILE_SIZE)-global.view_width : room_width-global.view_width);
 	} else {
-		camera_target_x = clamp(obj_player.x - (global.view_width/2) + (obj_player.x_vel_current*3) + (obj_player.facing*32), 0, room_width-global.view_width);
+		camera_target_x = clamp(obj_player.x - (global.view_width/2) + (obj_player.x_vel_current*3) + (obj_player.facing*TILE_SIZE), 0, room_width-global.view_width);
 	}
 	
 	var _camera_zone_y = collision_line(obj_player.x,camera_current_y,obj_player.x,camera_current_y+global.view_height,obj_camera_zone,false,false);
@@ -44,3 +44,9 @@ camera_current_y = lerp(camera_current_y,camera_target_y,camera_speed);
 camera_set_view_pos(view,camera_current_x+random_range(-global.screen_shake,global.screen_shake),camera_current_y+random_range(-global.screen_shake,global.screen_shake));
 
 #endregion
+
+if (global.screen_shake != 0) {
+	global.time_dilation_current = 0.2;
+} else {
+	global.time_dilation_current = global.time_dilation_standard;	
+}
