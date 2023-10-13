@@ -5,8 +5,8 @@
   "bbox_bottom": 15,
   "bbox_left": 0,
   "bbox_right": 47,
-  "bbox_top": 0,
-  "bboxMode": 0,
+  "bbox_top": 7,
+  "bboxMode": 2,
   "collisionKind": 1,
   "collisionTolerance": 0,
   "DynamicTexturePage": false,
@@ -32,8 +32,8 @@
   "nineSlice": null,
   "origin": 0,
   "parent": {
-    "name": "Sprites",
-    "path": "folders/Sprites.yy",
+    "name": "Tiles",
+    "path": "folders/Sprites/Tiles.yy",
   },
   "preMultiplyAlpha": false,
   "sequence": {

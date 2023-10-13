@@ -19,9 +19,11 @@ return {
 		
 		//in game verbs
 		jump: input_binding_key(vk_space),
-		grapple: input_binding_key("E"),
-		pause: input_binding_key(vk_escape),
+		grapple: input_binding_mouse_button(mb_left),
+		glide: input_binding_key("Q"),
 		run: input_binding_key(vk_shift),
+		pause: input_binding_key(vk_escape),
+		
         
 		//menu verbs
         accept:  [input_binding_key(vk_space), input_binding_key(vk_enter)],
@@ -37,9 +39,14 @@ return {
         
         //in game verbs
 		jump:  input_binding_gamepad_button(gp_face1),
+		run:  input_binding_gamepad_button(gp_face3),
+		glide:  input_binding_gamepad_button(gp_shoulderl),
 		grapple:  input_binding_gamepad_button(gp_shoulderr),
 		pause: input_binding_gamepad_button(gp_start),
-		run:  input_binding_gamepad_button(gp_face3),
+		aim_up:    input_binding_gamepad_axis(gp_axislv, true),
+        aim_down:  input_binding_gamepad_axis(gp_axislv, false),
+        aim_left:  input_binding_gamepad_axis(gp_axislh, true),
+        aim_right: input_binding_gamepad_axis(gp_axislh, false),
 		
 		
 		//menu verbs
@@ -49,3 +56,5 @@ return {
     }
     
 };
+
+input_chord_create("drop",0,"down","jump")

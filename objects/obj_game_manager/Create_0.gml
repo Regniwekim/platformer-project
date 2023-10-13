@@ -43,6 +43,6 @@ camera_initialized = false;
 
 #endregion
 
-room_goto(rm_test);
+room_goto(rm_demo);
 
 camy = noone;

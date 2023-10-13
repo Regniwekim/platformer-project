@@ -9,7 +9,7 @@ if (place_meeting(x + x_vel_current, y, par_solid)) {
 	    var _slope = false;
 	    // moving up slopes
 	for (var i = 1; i <= _tolerance; i++) {
-	        if (!place_meeting(x + x_vel_current, y - i, par_solid)) {
+	        if (!place_meeting(x + x_vel_current, y - i, par_solid) && !place_meeting(x + x_vel_current, y - i, obj_oneway_stairs)) {
 	            _slope = true;
 	            y -= i;
 	            break;
@@ -77,10 +77,170 @@ function vertical_movement() {
 
 function set_state(_state) {
 	//execute state leave
-	//state enter script 
 	if (state != _state) {
+		leave_state(state);
+		enter_state(_state);
 		state_previous = state;
 		state = _state;
+	}
+}
+
+function leave_state(_state) {
+	switch (_state) {
+		case player_state_ground:
+		break;
+		
+		case player_state_jump:
+		break;
+		
+		case player_state_air:
+		break;
+		
+		case player_state_cling:
+		break;
+		
+		case player_state_glide:
+		break;
+		
+		case player_state_ladder:
+		break;
+		
+		case player_state_grapple:
+			instance_destroy(grapple_hook);
+		break;
+		
+		case player_state_skid:
+		break;
+		
+		case player_state_slide:
+		break;
+
+	}
+}
+
+function enter_state(_state) {
+	switch (_state) {
+		case player_state_ground:
+			if (state_previous = player_state_air || state_previous = player_state_jump || state_previous = player_state_glide || state_previous = player_state_grapple) {
+				set_sprite(spr_land,true,0.5);
+			} else if input_check("down") {
+				set_sprite(spr_crouch,,);
+			} else {
+				set_sprite(spr_idle,,0.5);	
+			}
+			acceleration_multiplier = 1;
+			braking_multiplier = 1;
+			jump_height_multiplier = 1;
+			friction_multiplier = 1;
+			gravity_multiplier = 1;
+			jump_height_multiplier = 1;
+			sticky_current = sticky_max;
+			multijump_current = global.multijump_max;
+		break;
+		
+		case player_state_jump:
+			if (sprite_index != spr_air_jump) {
+				set_sprite(spr_jump,true,1);
+			}
+			if (multijump_current = global.multijump_max) {
+				audio_play_sound(snd_jump1,0,false);
+			} else {
+				audio_play_sound(snd_jump3,0,false);	
+			}
+			acceleration_multiplier = 1;
+			braking_multiplier = 1;
+			jump_height_multiplier = 1;
+			friction_multiplier = 1;
+			gravity_multiplier = 1;
+			jump_height_multiplier = 1;
+			resistance_multiplier = resistance_air;
+			sticky_current = sticky_max;
+		break;
+		
+		case player_state_air:
+			set_sprite(spr_fall,true,1);
+			acceleration_multiplier = 1;
+			braking_multiplier = 1;
+			jump_height_multiplier = 1;
+			friction_multiplier = 1;
+			gravity_multiplier = 1;
+			jump_height_multiplier = 1;
+			resistance_multiplier = resistance_air;
+			sticky_current = sticky_max;
+		break;
+		
+		case player_state_cling:
+			set_sprite(spr_wall_land,true,1)
+			acceleration_multiplier = 1;
+			braking_multiplier = 1;
+			jump_height_multiplier = 1;
+			friction_multiplier = 1;
+			gravity_multiplier = 0.15;
+			jump_height_multiplier = 1;
+			sticky_current = sticky_max;
+			resistance_multiplier = resistance_ground;
+			multijump_current = global.multijump_max;
+		break;
+		
+		case player_state_glide:
+			set_sprite(spr_glide,true,0);
+			audio_play_sound(snd_impact3,0,false);
+			image_index = image_number-1;
+			acceleration_multiplier = 1;
+			braking_multiplier = 1;
+			jump_height_multiplier = 1;
+			friction_multiplier = 1;
+			gravity_multiplier = 0.15;
+			jump_height_multiplier = 1;
+			resistance_multiplier = resistance_air;
+			sticky_current = sticky_max;
+		break;
+		
+		case player_state_ladder:
+		break;
+		
+		case player_state_grapple:
+			set_sprite(spr_glide,true,0);
+			image_index = image_number-1;
+			acceleration_multiplier = 1;
+			braking_multiplier = 1;
+			jump_height_multiplier = 1;
+			friction_multiplier = 1;
+			gravity_multiplier = 1;
+			jump_height_multiplier = 1;
+			resistance_multiplier = resistance_ground;
+			sticky_current = sticky_max;
+			chain_length = point_distance(x,y-(sprite_get_height(sprite_index)/2),grapple_hook.x,grapple_hook.y);
+			max_chain_length = chain_length;
+			chain_direction = point_direction(grapple_hook.x,grapple_hook.y,x,y-(sprite_get_height(sprite_index)/2));
+			chain_x = x;
+			chain_y = y;
+			chain_angle_velocity = x_vel_current;
+		break;
+		
+		case player_state_skid:
+			skid_dir = x_vel_current;
+			if (abs(x_vel_current) > walk_speed_standard) {
+				set_sprite(spr_skid,true,);
+			}
+			braking_multiplier = 2;
+			acceleration_multiplier = 1;
+			jump_height_multiplier = 1;
+			friction_multiplier = 1;
+			gravity_multiplier = 0.15;
+			jump_height_multiplier = 1;
+			resistance_multiplier = resistance_ground;
+			sticky_current = sticky_max;
+		break;
+		
+		case player_state_slide:
+			slide_dir = sign(x_vel_current);
+			set_sprite(spr_slide,true,);
+			braking_multiplier = 0.5;
+			friction_multiplier = 0.75;
+			sticky_current = sticky_max;
+		break;
+
 	}
 }
 
@@ -129,14 +289,19 @@ function player_input_jump() {
 			y_vel_current = -jump_height_current;
 			multijump_current--;
 			set_state(player_state_jump);
-			
-		} else if (global.glider_unlocked) {
-			set_state(player_state_glide);
-		}
-		
-	}else if (input_check("jump") && can_jump <= 0 && multijump_current <= 0 && !place_meeting(x,y+(y_vel_current*coyote_time),par_solid) && y_vel_current >= 0 && global.glider_unlocked) {
-		set_state(player_state_glide);	
+		} 		
 	}
+}
+
+function player_jump_ground() {
+	if (jump_buffer > 0) {
+		y_vel_current = -jump_height_current;
+		set_state(player_state_jump);
+	}
+	
+	jump_buffer = 0;
+	can_jump = coyote_time;
+	multijump_current = global.multijump_max;	
 }
 
 function player_input_walljump() {
@@ -151,17 +316,37 @@ function player_input_ladder() {
 	}	
 }
 
+function player_input_glide() {
+	if (y_vel_current >= 0 && input_check("glide") && global.glider_unlocked) {
+		set_state(player_state_glide);
+	}
+}
+
 function player_input_grapple() {
+	
+	/*
+	if (instance_exists(obj_grapple_point)) {
+		var _gp = instance_nearest(input_cursor_x(),input_cursor_y(),obj_grapple_point);
+			if (point_distance(x,y,_gp.x,_gp.y) < global.view_width/1.5)	{
+				grapple_point = _gp;
+				grapple_direction = point_direction(x,y-(sprite_get_height(sprite_index)/2),grapple_point.x,grapple_point.y);
+			} else grapple_point = noone;
+	} else grapple_point = noone;
+	*/
+	
 	if (input_check_pressed("grapple") && global.grapple_unlocked) {
 		if (instance_exists(grapple_hook)) {
 				instance_destroy(grapple_hook,true);
 				set_state(player_state_air);
-		} else {
+				
+		} else /*if (instance_exists(grapple_point) && !instance_exists(obj_grapple_hook))*/ {
+			grapple_direction = aim_direction;
 			grapple_hook = instance_create_depth(x,y-(sprite_get_height(sprite_index)/2),depth+1,obj_grapple_hook,{
-				x_vel_current : lengthdir_x(30,aim_dir),
-				y_vel_current : lengthdir_y(30,aim_dir),
-				image_angle : aim_dir
+				x_vel_current : lengthdir_x(30,grapple_direction),
+				y_vel_current : lengthdir_y(30,grapple_direction),
+				rotation : grapple_direction
 			});
 		}
 	}
+	if (!input_check("grapple") && instance_exists(grapple_hook)) instance_destroy(grapple_hook);
 }

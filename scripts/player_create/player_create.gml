@@ -25,7 +25,7 @@ active = true;
 
 xinput = 0;
 yinput = 0;
-aim_dir = 0;
+aim_direction = 0;
 
 air_resistance = 0.75;
 water_resistance = 0.5;	
@@ -58,12 +58,12 @@ gravity_standard = 0.5;
 gravity_multiplier = 1;
 gravity_current = gravity_standard * gravity_multiplier;
 
-resistance_standard = 1;
+resistance_ground = 1;
 resistance_air = 0.5;
 resistance_water = 0.5;
 resistance_ground = 1;
 resistance_multiplier = 1;
-resistance_current = resistance_standard*resistance_multiplier;
+resistance_current = resistance_ground*resistance_multiplier;
 
 x_vel_current = 0;
 y_vel_current = 0;
@@ -101,7 +101,10 @@ echo_facing = facing;
 xscale = image_xscale;
 
 grapple_hook = noone;
+grapple_point = noone;
+grapple_direction = 0;
 chain_length = 0;
+max_chain_length = 0;
 chain_direction = 0;
 chain_angle_velocity = 0;
 chain_x = x;

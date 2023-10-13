@@ -48,8 +48,8 @@
   },
   "origin": 7,
   "parent": {
-    "name": "Sprites",
-    "path": "folders/Sprites.yy",
+    "name": "Colliders",
+    "path": "folders/Sprites/Colliders.yy",
   },
   "preMultiplyAlpha": false,
   "sequence": {

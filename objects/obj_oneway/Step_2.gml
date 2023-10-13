@@ -13,7 +13,6 @@ if (instance_exists(obj_player)) {
 	}
 }
 
-
 if (place_meeting(x + x_vel, y, obj_platform_stop) || place_meeting(x + x_vel, y, par_solid)) x_vel *= -1;
 
 if (place_meeting(x, y + y_vel, obj_platform_stop) || place_meeting(x, y + y_vel, par_solid)) {

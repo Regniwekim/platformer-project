@@ -14,7 +14,7 @@ if (instance_exists(obj_player)) {
 }
 
 repeat(abs(x_vel_current)) {
-	if (!place_meeting(x+sign(x_vel_current),y,par_solid)) {
+	if (!place_meeting(x+sign(x_vel_current),y,par_solid) && !place_meeting(x+sign(x_vel_current),y,obj_oneway)) {
 		x += sign(x_vel_current);	
 	} else {
 		x_vel_current = 0;
@@ -28,8 +28,8 @@ repeat(abs(x_vel_current)) {
 }
 	
 repeat(abs(y_vel_current)) {
-	if (!place_meeting(x,y+sign(y_vel_current),par_solid)) {
-		y += sign(y_vel_current);	
+	if (!place_meeting(x,y+sign(y_vel_current),par_solid) && !place_meeting(x,y+sign(y_vel_current),obj_oneway)) {
+		y += sign(y_vel_current);
 	} else {
 		x_vel_current = 0;
 		y_vel_current = 0;
@@ -39,4 +39,10 @@ repeat(abs(y_vel_current)) {
 			}
 		}
 	}
+}
+
+if (collision_circle(x,y,4,obj_oneway,false,false)) {
+	var _oneway = collision_circle(x,y,4,obj_oneway,false,false);
+	x += _oneway.x_vel;
+	y += _oneway.y_vel;
 }

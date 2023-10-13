@@ -8,4 +8,4 @@ for (var i=0;i<chain_links;i++) {
 	1,1,chain_direction,c_white,1)
 }
 
-draw_sprite_ext(sprite_index,image_index,x,y,image_xscale,image_yscale,image_angle,image_blend,image_alpha);
+draw_sprite_ext(sprite_index,image_index,x,y,image_xscale,image_yscale,rotation,image_blend,image_alpha);

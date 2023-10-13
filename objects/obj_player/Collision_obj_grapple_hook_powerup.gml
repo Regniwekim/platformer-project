@@ -3,15 +3,6 @@
 
 audio_play_sound(snd_powerup,0,false);
 
-global.glider_unlocked = true;
+global.grapple_unlocked = true;
 
 with (other) instance_destroy();
-
-
-
-
-
-
-
-
-
