@@ -97,7 +97,6 @@
     {"name":"inst_34DE6C61","path":"rooms/rm_demo/rm_demo.yy",},
     {"name":"inst_434679DB","path":"rooms/rm_demo/rm_demo.yy",},
     {"name":"inst_D28E1F6","path":"rooms/rm_demo/rm_demo.yy",},
-    {"name":"inst_77B8FA31","path":"rooms/rm_demo/rm_demo.yy",},
     {"name":"inst_3AC119C9","path":"rooms/rm_demo/rm_demo.yy",},
     {"name":"inst_2CB3BE34","path":"rooms/rm_demo/rm_demo.yy",},
   ],
@@ -185,9 +184,6 @@
         {"resourceType":"GMRInstance","resourceVersion":"1.0","name":"inst_D28E1F6","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"objectId":{"name":"obj_fan","path":"objects/obj_fan/obj_fan.yy",},"properties":[
             {"resourceType":"GMOverriddenProperty","resourceVersion":"1.0","name":"","objectId":{"name":"obj_fan","path":"objects/obj_fan/obj_fan.yy",},"propertyId":{"name":"thrust","path":"objects/obj_fan/obj_fan.yy",},"value":"-4",},
           ],"rotation":180.0,"scaleX":1.0,"scaleY":1.0,"x":3184.0,"y":2144.0,},
-        {"resourceType":"GMRInstance","resourceVersion":"1.0","name":"inst_77B8FA31","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"objectId":{"name":"obj_fan","path":"objects/obj_fan/obj_fan.yy",},"properties":[
-            {"resourceType":"GMOverriddenProperty","resourceVersion":"1.0","name":"","objectId":{"name":"obj_fan","path":"objects/obj_fan/obj_fan.yy",},"propertyId":{"name":"thrust","path":"objects/obj_fan/obj_fan.yy",},"value":"4",},
-          ],"rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":144.0,"y":3072.0,},
         {"resourceType":"GMRInstance","resourceVersion":"1.0","name":"inst_3AC119C9","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"objectId":{"name":"obj_fan","path":"objects/obj_fan/obj_fan.yy",},"properties":[
             {"resourceType":"GMOverriddenProperty","resourceVersion":"1.0","name":"","objectId":{"name":"obj_fan","path":"objects/obj_fan/obj_fan.yy",},"propertyId":{"name":"thrust","path":"objects/obj_fan/obj_fan.yy",},"value":"4",},
           ],"rotation":90.0,"scaleX":1.0,"scaleY":1.0,"x":1712.0,"y":3184.0,},
