@@ -6,14 +6,12 @@ if (!instance_exists(global.camera_follow) && instance_exists(obj_player)) {
 	global.camera_follow = obj_player;		
 }
 
-var _cam_width = lerp(camera_width,global.view_width*global.camera_follow.zoom,0.1);
-var _cam_height = lerp(camera_height,global.view_height*global.camera_follow.zoom,0.1);
-camera_set_view_size(view, _cam_width, _cam_height);
+
 camera_current_x = camera_get_view_x(view);
 camera_current_y = camera_get_view_y(view);
 
 if (global.camera_follow = obj_player) {
-	
+	camera_set_view_size(view, lerp(camera_width,global.view_width,0.1), lerp(camera_height,global.view_height,0.1));
 	
 #region horizontal camera movement
 var _camera_zone_x_list = ds_list_create();
@@ -119,9 +117,18 @@ if (collision_line(obj_player.x,camera_current_y,obj_player.x,camera_current_y+g
 #endregion
 
 } else {
-	camera_target_x = clamp(global.camera_follow.x - (global.view_width/2), 0, room_width-global.view_width);
+	var _view_width_target = global.camera_follow.bbox_right - global.camera_follow.bbox_left;
+	var _view_height_target = global.camera_follow.bbox_bottom - global.camera_follow.bbox_top;
+	
+	var _cam_width = lerp(camera_width,_view_width_target,0.1);
+	
+	var _aspect_target = global.view_width/global.view_height;	
+	var _cam_height = lerp(camera_height,_view_width_target/_aspect_target,0.1);
+	
+	camera_set_view_size(view, _cam_width, _cam_height);
+	camera_target_x = clamp(global.camera_follow.bbox_left, 0, room_width-_view_width_target);
 	camera_current_x = camera_get_view_x(view);
-	camera_target_y = clamp(global.camera_follow.y - (global.view_height/2), 0, room_height-global.view_height);
+	camera_target_y = clamp(global.camera_follow.bbox_bottom -_cam_height + TILE_SIZE, 0, room_height-(_view_width_target/_aspect_target));
 	camera_current_y = camera_get_view_y(view);
 }
 

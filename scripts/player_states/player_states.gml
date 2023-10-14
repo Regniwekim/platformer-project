@@ -121,15 +121,16 @@ function player_state_glide() {
 	
 	if (place_meeting(x,y,obj_fan_zone)) {
 		var _fan_zone = instance_place(x,y,obj_fan_zone);
-		if (instance_exists(_fan_zone)) {
-			if (_fan_zone.y_thrust != 0) {
-				y_vel_current = approach(y_vel_current,y_vel_max*sign(_fan_zone.y_thrust)*global.time_dilation_current,abs(_fan_zone.y_thrust)*acceleration_current*global.time_dilation_current);
+		if (instance_exists(_fan_zone) && _fan_zone.thrust != 0) {
+			if (abs(_fan_zone.image_angle) == 0 || abs(_fan_zone.image_angle) == 180) {
+				x_vel_current = approach(x_vel_current,x_vel_max*_fan_zone.thrust*global.time_dilation_current,abs(_fan_zone.thrust)*acceleration_current*global.time_dilation_current);
 			}
-			if (_fan_zone.x_thrust != 0) {
-				x_vel_current = approach(x_vel_current,x_vel_max*_fan_zone.x_thrust*global.time_dilation_current,abs(_fan_zone.x_thrust)*acceleration_current*global.time_dilation_current);
-			}
+			if (abs(_fan_zone.image_angle) == 90 || abs(_fan_zone.image_angle) == 270) {
+				y_vel_current = approach(y_vel_current,y_vel_max*-sign(_fan_zone.thrust)*global.time_dilation_current,abs(_fan_zone.thrust)*acceleration_current*global.time_dilation_current);
+			}			
 		}
-	} else {
+	}else {
+		
 		if (y_vel_current < 0) y_vel_current *= 0.85;
 		if (y_vel_current > y_vel_max * gravity_multiplier) y_vel_current = approach(y_vel_current,y_vel_max * gravity_multiplier * global.time_dilation_current, gravity_current * 2 * global.time_dilation_current);
 	}

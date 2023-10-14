@@ -17,9 +17,9 @@ part_type_scale(pt, 0.05, 1.2);
 part_type_color3(pt, make_color_rgb(255.00, 255, 255.00), make_color_rgb(189.43, 173.16, 196.25), make_color_rgb(137.30, 125.85, 203.75));
 part_type_alpha3(pt, 0.75, 0.05, 0.2);
 part_type_life(pt, 30, 120);
-part_type_orientation(pt, image_angle-1, image_angle+1, 0, 0, false);
-part_type_speed(pt, 0.4, 3, 0, 0);
-part_type_direction(pt, image_angle+87.5, image_angle+92.5, 0, 0);
+part_type_orientation(pt, image_angle+89, image_angle+91, 0, 0, false);
+part_type_speed(pt, 0.4*(4/thrust), 3*(4/thrust), 0, 0);
+part_type_direction(pt, image_angle-2.5, image_angle+2.5, 0, 0);
 part_type_gravity(pt, 0, 0);
 
 
@@ -28,7 +28,6 @@ part_emitter_stream(ps, pe, pt, 1); // where 1 is the number of particles
 var _fan_zone = instance_create_depth(x,y,depth+1,obj_fan_zone,
 {
 	image_angle : image_angle,
-	image_yscale : (y_thrust != 0 ? y_thrust * 4 : -x_thrust * 4),
-	x_thrust : x_thrust,
-	y_thrust : y_thrust
+	image_xscale : thrust*4,
+	thrust: thrust
 });
