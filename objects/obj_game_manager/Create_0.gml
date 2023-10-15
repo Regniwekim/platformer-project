@@ -5,7 +5,7 @@
 global.multijump_max = 0;
 global.walljump_unlocked = 0;
 global.dash_unlocked = 0;
-global.bash_unlocked = 0;
+global.bash_unlocked = 1;
 global.glider_unlocked = 0;
 global.grapple_unlocked = 0;
 global.slowmo_unlocked = 0;
@@ -46,4 +46,4 @@ camera_initialized = false;
 
 room_goto(rm_demo);
 
-camy = noone;
+global.debug = false;

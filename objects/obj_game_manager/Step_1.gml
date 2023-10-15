@@ -17,3 +17,9 @@ global.camera_follow.bbox_left-2,global.camera_follow.bbox_top-2,global.camera_f
 global.screen_shake = approach(global.screen_shake,0,max(0.05,global.screen_shake/10));
 
 #endregion
+
+if keyboard_check_pressed(ord("O"))
+{
+    global.debug = !global.debug;
+    show_debug_overlay(global.debug);
+}

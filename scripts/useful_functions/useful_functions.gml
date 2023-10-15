@@ -15,7 +15,7 @@ function approach(_start, _end, _shift){
 }
 
 function animation_end() {
-	return image_index == image_number-1;	
+	return image_index >= image_number-1;	
 }
 
 function set_sprite(_sprite,_anim_reset = false,_image_speed = 1) {

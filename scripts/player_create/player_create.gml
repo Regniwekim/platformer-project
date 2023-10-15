@@ -59,6 +59,7 @@ gravity_multiplier = 1;
 gravity_current = gravity_standard * gravity_multiplier;
 
 resistance_ground = 1;
+resistance_standard = resistance_ground;
 resistance_air = 0.5;
 resistance_water = 0.5;
 resistance_ground = 1;
@@ -109,6 +110,16 @@ chain_direction = 0;
 chain_angle_velocity = 0;
 chain_x = x;
 chain_y = y;
+
+
+dash_timer_max = 6;
+dash_timer_current = dash_timer_max;
+dash_count_max = 1;
+dash_count_current = dash_count_max;
+dash_distance_max = 120;
+dash_targeting = false;
+dash_point = noone;
+dash_speed = 15;
 
 state = player_state_ground;
 state_previous = state;

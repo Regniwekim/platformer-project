@@ -40,7 +40,7 @@ if (active) {
 		facing = xinput;
 	}
 	
-	xscale = approach(xscale,facing,0.33);
+	xscale = approach(xscale,facing,0.5);
 	
 	step_size = (sprite_get_width(sprite_index)/image_number)*2;
 

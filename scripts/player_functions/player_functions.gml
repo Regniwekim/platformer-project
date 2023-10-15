@@ -75,6 +75,19 @@ function vertical_movement() {
 	y_vel_current = approach(y_vel_current, y_vel_max * gravity_multiplier, gravity_current*global.time_dilation_current);
 }
 
+function default_stats() {
+	acceleration_multiplier = 1;
+	braking_multiplier = 1;
+	jump_height_multiplier = 1;
+	friction_multiplier = 1;
+	gravity_multiplier = 1;
+	jump_height_multiplier = 1;
+	sticky_current = sticky_max;
+	resistance_multiplier = resistance_standard;
+	dash_timer_current = dash_timer_max;
+	global.time_dilation_target = global.time_dilation_standard;
+	//dash_targeting = false;
+}
 function set_state(_state) {
 	//execute state leave
 	if (state != _state) {
@@ -114,11 +127,18 @@ function leave_state(_state) {
 		
 		case player_state_slide:
 		break;
+		
+		case player_state_dash:
+		break;
+		
+		default:
+		break;
 
 	}
 }
 
 function enter_state(_state) {
+	if (state != _state) {
 	switch (_state) {
 		case player_state_ground:
 			if (state_previous = player_state_air || state_previous = player_state_jump || state_previous = player_state_glide || state_previous = player_state_grapple) {
@@ -128,14 +148,9 @@ function enter_state(_state) {
 			} else {
 				set_sprite(spr_idle,,0.5);	
 			}
-			acceleration_multiplier = 1;
-			braking_multiplier = 1;
-			jump_height_multiplier = 1;
-			friction_multiplier = 1;
-			gravity_multiplier = 1;
-			jump_height_multiplier = 1;
-			sticky_current = sticky_max;
+			default_stats();
 			multijump_current = global.multijump_max;
+			dash_count_current = dash_count_max;
 		break;
 		
 		case player_state_jump:
@@ -147,53 +162,31 @@ function enter_state(_state) {
 			} else {
 				audio_play_sound(snd_jump3,0,false);	
 			}
-			acceleration_multiplier = 1;
-			braking_multiplier = 1;
-			jump_height_multiplier = 1;
-			friction_multiplier = 1;
-			gravity_multiplier = 1;
-			jump_height_multiplier = 1;
+			default_stats();
 			resistance_multiplier = resistance_air;
-			sticky_current = sticky_max;
 		break;
 		
 		case player_state_air:
 			set_sprite(spr_fall,true,1);
-			acceleration_multiplier = 1;
-			braking_multiplier = 1;
-			jump_height_multiplier = 1;
-			friction_multiplier = 1;
-			gravity_multiplier = 1;
-			jump_height_multiplier = 1;
+			default_stats();
 			resistance_multiplier = resistance_air;
-			sticky_current = sticky_max;
 		break;
 		
 		case player_state_cling:
 			set_sprite(spr_wall_land,true,1)
-			acceleration_multiplier = 1;
-			braking_multiplier = 1;
-			jump_height_multiplier = 1;
-			friction_multiplier = 1;
+			default_stats();
 			gravity_multiplier = 0.15;
-			jump_height_multiplier = 1;
-			sticky_current = sticky_max;
-			resistance_multiplier = resistance_ground;
 			multijump_current = global.multijump_max;
+			dash_count_current = dash_count_max;
 		break;
 		
 		case player_state_glide:
 			set_sprite(spr_glide,true,0);
 			audio_play_sound(snd_impact3,0,false);
 			image_index = image_number-1;
-			acceleration_multiplier = 1;
-			braking_multiplier = 1;
-			jump_height_multiplier = 1;
-			friction_multiplier = 1;
+			default_stats();
 			gravity_multiplier = 0.15;
-			jump_height_multiplier = 1;
 			resistance_multiplier = resistance_air;
-			sticky_current = sticky_max;
 		break;
 		
 		case player_state_ladder:
@@ -202,14 +195,10 @@ function enter_state(_state) {
 		case player_state_grapple:
 			set_sprite(spr_glide,true,0);
 			image_index = image_number-1;
-			acceleration_multiplier = 1;
-			braking_multiplier = 1;
-			jump_height_multiplier = 1;
-			friction_multiplier = 1;
-			gravity_multiplier = 1;
-			jump_height_multiplier = 1;
-			resistance_multiplier = resistance_ground;
-			sticky_current = sticky_max;
+			default_stats();
+			multijump_current = global.multijump_max;
+			dash_count_current = dash_count_max;
+			resistance_multiplier = resistance_air;
 			chain_length = point_distance(x,y-(sprite_get_height(sprite_index)/2),grapple_hook.x,grapple_hook.y);
 			max_chain_length = chain_length;
 			chain_direction = point_direction(grapple_hook.x,grapple_hook.y,x,y-(sprite_get_height(sprite_index)/2));
@@ -223,24 +212,39 @@ function enter_state(_state) {
 			if (abs(x_vel_current) > walk_speed_standard) {
 				set_sprite(spr_skid,true,);
 			}
+			default_stats();
 			braking_multiplier = 2;
-			acceleration_multiplier = 1;
-			jump_height_multiplier = 1;
-			friction_multiplier = 1;
-			gravity_multiplier = 0.15;
-			jump_height_multiplier = 1;
-			resistance_multiplier = resistance_ground;
-			sticky_current = sticky_max;
+			dash_count_current = dash_count_max;
 		break;
 		
 		case player_state_slide:
 			slide_dir = sign(x_vel_current);
 			set_sprite(spr_slide,true,);
+			default_stats();
 			braking_multiplier = 0.5;
 			friction_multiplier = 0.75;
-			sticky_current = sticky_max;
+			dash_count_current = dash_count_max;
 		break;
+		
+		case player_state_dash:
+			default_stats();
+			gravity_multiplier = 0;
+			dash_timer_current = dash_timer_max;
+			global.time_dilation_target = global.time_dilation_standard;
+			obj_game_manager.camera_current_x += lengthdir_x(dash_speed*5,dash_direction);
+			obj_game_manager.camera_current_y += lengthdir_y(dash_speed*5,dash_direction);
+		break;
+		
+		case player_state_dash_targeting:
+			default_stats();
+			global.time_dilation_target = global.time_dilation_slow;
+			break;
+		
+		default:
+			default_stats();
+			break;
 
+	}
 	}
 }
 
@@ -323,23 +327,13 @@ function player_input_glide() {
 }
 
 function player_input_grapple() {
-	
 	/*
-	if (instance_exists(obj_grapple_point)) {
-		var _gp = instance_nearest(input_cursor_x(),input_cursor_y(),obj_grapple_point);
-			if (point_distance(x,y,_gp.x,_gp.y) < global.view_width/1.5)	{
-				grapple_point = _gp;
-				grapple_direction = point_direction(x,y-(sprite_get_height(sprite_index)/2),grapple_point.x,grapple_point.y);
-			} else grapple_point = noone;
-	} else grapple_point = noone;
-	*/
-	
 	if (input_check_pressed("grapple") && global.grapple_unlocked) {
 		if (instance_exists(grapple_hook)) {
 				instance_destroy(grapple_hook,true);
 				set_state(player_state_air);
 				
-		} else /*if (instance_exists(grapple_point) && !instance_exists(obj_grapple_hook))*/ {
+		} else {
 			grapple_direction = aim_direction;
 			grapple_hook = instance_create_depth(x,y-(sprite_get_height(sprite_index)/2),depth+1,obj_grapple_hook,{
 				x_vel_current : lengthdir_x(30,grapple_direction),
@@ -349,4 +343,51 @@ function player_input_grapple() {
 		}
 	}
 	if (!input_check("grapple") && instance_exists(grapple_hook)) instance_destroy(grapple_hook);
+	*/
+}
+
+function player_input_dash() {
+	var _nearest_dash_point = instance_nearest(x,y,obj_grapple_point);
+	
+	if (!dash_targeting) {
+		if (instance_exists(_nearest_dash_point) && point_distance(x,y, _nearest_dash_point.x, _nearest_dash_point.y) <= dash_distance_max && global.bash_unlocked && dash_count_current != 10) {
+			if (input_check("grapple")) {
+				dash_point = _nearest_dash_point;
+				dash_targeting = true;
+			}
+		}
+	}
+	
+	if (dash_targeting && instance_exists(dash_point)) {
+		global.time_dilation_target = global.time_dilation_slow;
+		dash_point.active = 1;
+		dash_point.arrow_distance++;
+		
+		if (!input_check("grapple")) {
+			dash_direction = point_direction(x,y,dash_point.x,dash_point.y);
+			with (obj_grapple_point) {
+				active = 0;
+				arrow_distance = 0;
+			}
+			dash_count_current--;
+			//dash_point = noone;
+			dash_targeting = false;
+			set_state(player_state_dash);
+		}
+	
+		if (point_distance(x,y,dash_point.x,dash_point.y) > dash_distance_max) {
+			with (obj_grapple_point) {
+				active = 0;
+				arrow_distance = 0;
+			}
+			global.time_dilation_target = global.time_dilation_standard;
+			if (on_ground()) {
+				set_state(player_state_ground);	
+			} else {
+				set_state(player_state_air);	
+			}		
+		}
+	
+		
+	}
 }

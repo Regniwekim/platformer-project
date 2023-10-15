@@ -147,5 +147,5 @@ camera_set_view_pos(view,camera_current_x+random_range(-global.screen_shake,glob
 if (global.screen_shake != 0) {
 	global.time_dilation_current = 0.2;
 } else {
-	global.time_dilation_current = global.time_dilation_standard;	
+	global.time_dilation_current = global.time_dilation_target;	
 }

@@ -18,7 +18,6 @@ function player_state_ground() {
 	if (sprite_index = spr_land && abs(x_vel_current) > 1) set_sprite(spr_idle,true,0.5);
 	if (animation_end() && sprite_index = spr_land) set_sprite(spr_idle,true,0.5);
 	
-	
 	if (sprite_index != spr_land) {
 		if (xinput = 0) {
 			if (x_vel_current != 0) {
@@ -46,7 +45,7 @@ function player_state_ground() {
 	player_jump_ground();	
 	player_input_jump();	
 	player_input_ladder();	
-	player_input_grapple();
+	player_input_dash();
 	
 	horizontal_movement();	
 	vertical_movement();
@@ -75,7 +74,7 @@ function player_state_jump() {
 	
 	player_input_ladder();
 	
-	player_input_grapple();
+	player_input_dash();
 	
 	horizontal_movement();
 	
@@ -99,7 +98,7 @@ function player_state_air() {
 	
 	player_input_walljump();
 	
-	player_input_grapple();
+	player_input_dash();
 	
 	player_input_ladder();
 	
@@ -139,7 +138,7 @@ function player_state_glide() {
 	
 	player_input_walljump();
 	
-	player_input_grapple();
+	player_input_dash();
 	
 	player_input_ladder();
 	
@@ -181,7 +180,7 @@ function player_state_cling() {
 	
 	player_jump_ground()
 	
-	player_input_grapple();
+	player_input_dash();
 	
 	vertical_movement();	
 	
@@ -203,7 +202,7 @@ function player_state_ladder() {
 		y_vel_current = _yinput * climb_speed;
 		image_index += _yinput;
 		
-		player_input_grapple();
+		player_input_dash();
 		
 		player_input_jump();
 }
@@ -225,7 +224,7 @@ function player_state_skid() {
 	
 	player_input_jump();
 	
-	player_input_grapple();
+	player_input_dash();
 	
 	vertical_movement();	
 	
@@ -240,7 +239,7 @@ function player_state_slide() {
 	
 	player_input_jump();
 	
-	player_input_grapple();
+	player_input_dash();
 	
 	x_vel_current = approach(x_vel_current,0,acceleration_current*braking_current*resistance_current*friction_current*global.time_dilation_current);
 	
@@ -287,4 +286,24 @@ function player_state_grapple() {
 	
 	player_input_ladder();
 	
+}
+
+function player_state_dash() {
+	global.time_dilation_target = global.time_dilation_standard;
+	dash_timer_current--;
+	x_vel_current = lengthdir_x(dash_speed,dash_direction);
+	y_vel_current = lengthdir_y(dash_speed,dash_direction);
+	
+	if (dash_timer_current <= 0) {
+		if (on_ground()) {
+			set_state(player_state_ground)
+		} else {
+			set_state(player_state_air);
+		}
+	}
+}
+
+function player_state_dash_targeting() {
+	default_stats();
+	set_sprite(sprite_index,false,min(image_speed,global.time_dilation_current));
 }
