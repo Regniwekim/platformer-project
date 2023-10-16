@@ -19,10 +19,10 @@ function animation_end() {
 }
 
 function set_sprite(_sprite,_anim_reset = false,_image_speed = 1) {
-	sprite_index = _sprite;
-	if (_anim_reset) {
+	if (_anim_reset && sprite_index != _sprite) {
 		image_index = 0;
 	}
+	sprite_index = _sprite;	
 	image_speed = _image_speed * global.time_dilation_current;
 }
 
@@ -38,8 +38,8 @@ function draw_text_stroke(_x,_y,_string,_stroke_color = c_black,_stroke_width = 
 	draw_text(_x,_y,_string);
 }
 
-function in_view() {
-	return (bbox_right > camera_get_view_x(view) && bbox_left < camera_get_view_x(view)+global.view_width && bbox_bottom > camera_get_view_y(view) && bbox_top < camera_get_view_y(view) + global.view_height);
+function in_view(_buffer = TILE_SIZE) {
+	return (bbox_right > camera_get_view_x(view) - _buffer && bbox_left < camera_get_view_x(view) + global.view_width + _buffer && bbox_bottom > camera_get_view_y(view) - _buffer && bbox_top < camera_get_view_y(view) + global.view_height) + _buffer;
 }
 
 function tilemap_autotile(_map, _cx, _cy, _addTile) 

@@ -10,16 +10,14 @@ spr_skid = spr_player_skid;
 spr_walk = spr_player_walk;
 spr_run = spr_player_run;
 spr_land = spr_player_land;
+spr_roll = spr_player_roll;
 spr_wall_slide = spr_player_wall_slide;
 spr_wall_land = spr_player_wall_land;
-spr_crouch = spr_player_crouch_idle;
+spr_crouch_idle = spr_player_crouch_idle;
 spr_crouch_walk = spr_player_crouch_walk;
 
 //number of pixels covered per step divided by the number of frames per step = pixels moved per frame at image_speed = 1
-crouch_step_size = 19/6;
-run_step_size = 18/2;
-walk_step_size = 13/5;
-step_size = sprite_get_width(sprite_index)/image_number;
+step_size = (sprite_get_width(sprite_index)/image_number)*2;
 
 active = true;
 
@@ -104,6 +102,7 @@ xscale = image_xscale;
 grapple_hook = noone;
 grapple_point = noone;
 grapple_direction = 0;
+grapple_distance_max = 160;
 chain_length = 0;
 max_chain_length = 0;
 chain_direction = 0;

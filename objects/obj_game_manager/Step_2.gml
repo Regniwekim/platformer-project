@@ -10,57 +10,74 @@ if (!instance_exists(global.camera_follow) && instance_exists(obj_player)) {
 camera_current_x = camera_get_view_x(view);
 camera_current_y = camera_get_view_y(view);
 
-if (global.camera_follow = obj_player) {
+if (global.camera_follow = obj_player)
+{
 	camera_set_view_size(view, lerp(camera_width,global.view_width,0.1), lerp(camera_height,global.view_height,0.1));
 	
 #region horizontal camera movement
 var _camera_zone_x_list = ds_list_create();
-if (collision_line(camera_current_x,obj_player.y-2,camera_current_x+global.view_width,obj_player.y-2,obj_camera_zone,false,false)) {
+if (collision_line(camera_current_x,obj_player.y-2,camera_current_x+global.view_width,obj_player.y-2,obj_camera_zone,false,false))
+{
 
 	var _num_x = collision_line_list(camera_current_x,obj_player.y-2,camera_current_x+global.view_width,obj_player.y-2,obj_camera_zone,false,false,_camera_zone_x_list,false);
-	if (_num_x > 0) {
+	if (_num_x > 0)
+	{
 		var _camera_zone_left = noone;
 		var _camera_zone_right = noone;
-		for (var i=0;i<_num_x;i++) {
-			if 	(_camera_zone_x_list[| i].left_block){
-				if (instance_exists(_camera_zone_left)) {
-					if (_camera_zone_x_list[| i].bbox_right < _camera_zone_left.bbox_right) {
+		for (var i=0;i<_num_x;i++)
+		{
+			if 	(_camera_zone_x_list[| i].left_block)
+			{
+				if (instance_exists(_camera_zone_left))
+				{
+					if (_camera_zone_x_list[| i].bbox_right < _camera_zone_left.bbox_right)
+					{
 						_camera_zone_left = _camera_zone_x_list[| i];
 					}
-				} else {
+				} else
+				{
 					_camera_zone_left = _camera_zone_x_list[| i];
 				}
 			}
-			if 	(_camera_zone_x_list[| i].right_block){
-				if (instance_exists(_camera_zone_right)) {
-					if 	(_camera_zone_x_list[| i].bbox_left > _camera_zone_right.bbox_left){
+			if 	(_camera_zone_x_list[| i].right_block)
+			{
+				if (instance_exists(_camera_zone_right))
+				{
+					if 	(_camera_zone_x_list[| i].bbox_left > _camera_zone_right.bbox_left)
+					{
 						_camera_zone_right = _camera_zone_x_list[| i];
 					}
-				} else {
+				} else
+				{
 					_camera_zone_right = _camera_zone_x_list[| i];
 				}
 			}
 		}
 			
-		if (instance_exists(_camera_zone_left) && obj_player.x > _camera_zone_left.bbox_right) {
+		if (instance_exists(_camera_zone_left) && obj_player.x > _camera_zone_left.bbox_right)
+		{
 			camera_target_x = clamp(
 			obj_player.x - (global.view_width/2) + (obj_player.x_vel_current*3) + (obj_player.facing*TILE_SIZE),
 			max(0,_camera_zone_left.bbox_right - TILE_SIZE),
 			room_width - global.view_height);
 				
-		}else if (instance_exists(_camera_zone_right) && obj_player.x < _camera_zone_right.bbox_left) {
+		}else if (instance_exists(_camera_zone_right) && obj_player.x < _camera_zone_right.bbox_left)
+		{
 			camera_target_x = clamp(
 			obj_player.x - (global.view_width/2) + (obj_player.x_vel_current*3) + (obj_player.facing*TILE_SIZE),
 			0, min(room_width,_camera_zone_right.bbox_left + TILE_SIZE)-global.view_width);
 				
-		} else {
+		} else
+		{
 			camera_target_x = clamp(obj_player.x - (global.view_width/2) + (obj_player.x_vel_current*3) + (obj_player.facing*TILE_SIZE), 0, room_width-global.view_width);
 		}
-	} else {
+	} else
+	{
 		camera_target_x = clamp(obj_player.x - (global.view_width/2) + (obj_player.x_vel_current*3) + (obj_player.facing*TILE_SIZE), 0, room_width-global.view_width);
 	}
 
-} else {
+} else
+{
 	camera_target_x = clamp(obj_player.x - (global.view_width/2) + (obj_player.x_vel_current*3) + (obj_player.facing*TILE_SIZE), 0, room_width-global.view_width);
 	ds_list_destroy(_camera_zone_x_list);
 }
@@ -116,7 +133,8 @@ if (collision_line(obj_player.x,camera_current_y,obj_player.x,camera_current_y+g
 }
 #endregion
 
-} else {
+} else
+{
 	var _view_width_target = global.camera_follow.bbox_right - global.camera_follow.bbox_left;
 	var _view_height_target = global.camera_follow.bbox_bottom - global.camera_follow.bbox_top;
 	

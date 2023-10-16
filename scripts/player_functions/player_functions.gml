@@ -1,7 +1,8 @@
 // Script assets have changed for v2.3.0 see
 // https://help.yoyogames.com/hc/en-us/articles/360005277377 for more information
 
-function actor_collision(){
+function actor_collision()
+{
 // set threshold based on speed
 var _tolerance = 1 +  ceil(abs(x_vel_current));
 // walking into a wall or upward _slope
@@ -68,7 +69,8 @@ y += y_vel_current*global.time_dilation_current;
 }
 
 function horizontal_movement() {
-	x_vel_current = approach(x_vel_current,walk_speed_current*xinput*resistance_current*run_multiplier_current*crouch_multiplier_current,acceleration_current*braking_current*resistance_current*friction_current*global.time_dilation_current);
+	walk_speed_current = walk_speed_standard * walk_speed_multiplier * resistance_current;
+	x_vel_current = approach(x_vel_current,walk_speed_current*xinput,acceleration_current*braking_current*resistance_current*friction_current*global.time_dilation_current);
 }
 
 function vertical_movement() {
@@ -85,6 +87,7 @@ function default_stats() {
 	sticky_current = sticky_max;
 	resistance_multiplier = resistance_standard;
 	dash_timer_current = dash_timer_max;
+	mask_index = spr_player_mask_stand;
 	global.time_dilation_target = global.time_dilation_standard;
 	//dash_targeting = false;
 }
@@ -93,93 +96,118 @@ function set_state(_state) {
 	if (state != _state) {
 		leave_state(state);
 		enter_state(_state);
-		state_previous = state;
-		state = _state;
 	}
 }
 
 function leave_state(_state) {
 	switch (_state) {
 		case player_state_ground:
-		break;
+			break;
 		
 		case player_state_jump:
-		break;
+			break;
 		
 		case player_state_air:
-		break;
+			break;
 		
 		case player_state_cling:
-		break;
+			break;
 		
 		case player_state_glide:
-		break;
+			break;
 		
 		case player_state_ladder:
-		break;
+			break;
 		
 		case player_state_grapple:
 			instance_destroy(grapple_hook);
-		break;
+			break;
 		
 		case player_state_skid:
-		break;
+			break;
 		
 		case player_state_slide:
-		break;
+			break;
 		
 		case player_state_dash:
-		break;
+			break;
 		
 		default:
-		break;
-
+			//do nothing
+			break;
 	}
+	state_previous = state;
 }
 
 function enter_state(_state) {
-	if (state != _state) {
 	switch (_state) {
+		#region ground
 		case player_state_ground:
-			if (state_previous = player_state_air || state_previous = player_state_jump || state_previous = player_state_glide || state_previous = player_state_grapple) {
-				set_sprite(spr_land,true,0.5);
-			} else if input_check("down") {
-				set_sprite(spr_crouch,,);
-			} else {
-				set_sprite(spr_idle,,0.5);	
+			if (state_previous = player_state_air || state_previous = player_state_jump || state_previous = player_state_glide || state_previous = player_state_grapple)
+			{
+				if (abs(x_vel_current) >= walk_speed_standard)
+				{
+					set_sprite(spr_roll,true,1);	
+				}
+				else
+				{
+					set_sprite(spr_land,true,0.5);
+				}
+			} else
+			{
+				set_sprite(spr_idle,true,0.5);	
 			}
 			default_stats();
 			multijump_current = global.multijump_max;
 			dash_count_current = dash_count_max;
-		break;
+			break;
+		#endregion
 		
+		#region crouch
+		case player_state_crouch:
+			default_stats();
+			walk_speed_multiplier = crouch_multiplier;
+			mask_index = spr_player_mask_crouch;
+			break;
+		#endregion
+		
+		#region jump
 		case player_state_jump:
-			if (sprite_index != spr_air_jump) {
+			default_stats();
+			resistance_multiplier = resistance_air;
+			if (sprite_index != spr_air_jump)
+			{
 				set_sprite(spr_jump,true,1);
 			}
-			if (multijump_current = global.multijump_max) {
+			if (multijump_current = global.multijump_max)
+			{
 				audio_play_sound(snd_jump1,0,false);
-			} else {
+			} else
+			{
 				audio_play_sound(snd_jump3,0,false);	
 			}
-			default_stats();
-			resistance_multiplier = resistance_air;
-		break;
+			break;
+		#endregion
 		
+		#region air
 		case player_state_air:
-			set_sprite(spr_fall,true,1);
 			default_stats();
 			resistance_multiplier = resistance_air;
-		break;
+			set_sprite(spr_fall,true,1);			
+			break;
+		#endregion
 		
+		#region cling
 		case player_state_cling:
-			set_sprite(spr_wall_land,true,1)
-			default_stats();
+			default_stats();			
 			gravity_multiplier = 0.15;
 			multijump_current = global.multijump_max;
 			dash_count_current = dash_count_max;
-		break;
+			set_sprite(spr_wall_land,true,1)
+			break;
+		#endregion
 		
+		#region glide
 		case player_state_glide:
 			set_sprite(spr_glide,true,0);
 			audio_play_sound(snd_impact3,0,false);
@@ -187,11 +215,15 @@ function enter_state(_state) {
 			default_stats();
 			gravity_multiplier = 0.15;
 			resistance_multiplier = resistance_air;
-		break;
+			break;
+		#endregion
 		
+		#region ladder
 		case player_state_ladder:
-		break;
+			break;
+		#endregion
 		
+		#region grapple
 		case player_state_grapple:
 			set_sprite(spr_glide,true,0);
 			image_index = image_number-1;
@@ -205,27 +237,32 @@ function enter_state(_state) {
 			chain_x = x;
 			chain_y = y;
 			chain_angle_velocity = x_vel_current;
-		break;
+			break;
+		#endregion
 		
+		#region skid
 		case player_state_skid:
-			skid_dir = x_vel_current;
-			if (abs(x_vel_current) > walk_speed_standard) {
-				set_sprite(spr_skid,true,);
-			}
 			default_stats();
+			skid_dir = x_vel_current;
 			braking_multiplier = 2;
 			dash_count_current = dash_count_max;
-		break;
+			set_sprite(spr_skid,true,0.5);			
+			break;
+		#endregion
 		
+		#region slide
 		case player_state_slide:
-			slide_dir = sign(x_vel_current);
-			set_sprite(spr_slide,true,);
 			default_stats();
-			braking_multiplier = 0.5;
+			slide_dir = sign(x_vel_current);
+			braking_multiplier = 0.75;
 			friction_multiplier = 0.75;
 			dash_count_current = dash_count_max;
-		break;
+			set_sprite(spr_slide,true,0.5);
+			mask_index = spr_player_mask_slide;
+			break;
+		#endregion
 		
+		#region dash
 		case player_state_dash:
 			default_stats();
 			gravity_multiplier = 0;
@@ -233,19 +270,24 @@ function enter_state(_state) {
 			global.time_dilation_target = global.time_dilation_standard;
 			obj_game_manager.camera_current_x += lengthdir_x(dash_speed*5,dash_direction);
 			obj_game_manager.camera_current_y += lengthdir_y(dash_speed*5,dash_direction);
-		break;
+			break;
+		#endregion
 		
+		#region dash targeting
 		case player_state_dash_targeting:
 			default_stats();
 			global.time_dilation_target = global.time_dilation_slow;
 			break;
+		#endregion
 		
+		#region default
 		default:
 			default_stats();
 			break;
+		#endregion
 
 	}
-	}
+	state = _state;
 }
 
 function on_ground() {
@@ -327,26 +369,41 @@ function player_input_glide() {
 }
 
 function player_input_grapple() {
-	/*
+	var _nearest_grapple_point = instance_nearest(x,y-(sprite_get_height(sprite_index)/2),obj_grapple_point);
 	if (input_check_pressed("grapple") && global.grapple_unlocked) {
 		if (instance_exists(grapple_hook)) {
-				instance_destroy(grapple_hook,true);
-				set_state(player_state_air);
-				
+			instance_destroy(grapple_hook,true);
+			with (obj_grapple_point) {
+				active = 0;	
+			}				
 		} else {
-			grapple_direction = aim_direction;
-			grapple_hook = instance_create_depth(x,y-(sprite_get_height(sprite_index)/2),depth+1,obj_grapple_hook,{
-				x_vel_current : lengthdir_x(30,grapple_direction),
-				y_vel_current : lengthdir_y(30,grapple_direction),
-				rotation : grapple_direction
-			});
+			if (instance_exists(_nearest_grapple_point) && point_distance(x,y-(sprite_get_height(sprite_index)/2),_nearest_grapple_point.x,_nearest_grapple_point.y) < grapple_distance_max) {
+				with (obj_grapple_point) {
+					active = 0;	
+				}
+				_nearest_grapple_point.active = 1;
+				grapple_direction = point_direction(x,y-(sprite_get_height(sprite_index)/2),_nearest_grapple_point.x,_nearest_grapple_point.y);
+				grapple_hook = instance_create_depth(x,y-(sprite_get_height(sprite_index)/2),depth+1,obj_grapple_hook);
+				with (grapple_hook) {
+					rotation = other.grapple_direction;
+				}
+					
+			}
 		}
+	} else {
+		with (obj_grapple_point) {
+				active = 0;	
+			}	
 	}
-	if (!input_check("grapple") && instance_exists(grapple_hook)) instance_destroy(grapple_hook);
-	*/
+	if (!input_check("grapple") && instance_exists(grapple_hook)) {
+		with (obj_grapple_point) {
+				active = 0;	
+		}
+		instance_destroy(grapple_hook);
+	}
 }
 
-function player_input_dash() {
+function player_input_bash() {
 	var _nearest_dash_point = instance_nearest(x,y,obj_grapple_point);
 	
 	if (!dash_targeting) {

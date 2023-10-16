@@ -1,52 +1,70 @@
 // Script assets have changed for v2.3.0 see
 // https://help.yoyogames.com/hc/en-us/articles/360005277377 for more information
-function player_state_ground() {	
+function player_state_ground()
+{	
 	
-	if (input_check("run")) {
-		run_multiplier_current = run_multiplier;
-	} else run_multiplier_current = 1;
+	if (input_check("run"))
+	{
+		walk_speed_multiplier = run_multiplier;
+	} else
+	{
+		walk_speed_multiplier = 1;
+	}
 	
-	if (input_check("down")) {
-		if (abs(x_vel_current) > walk_speed_standard*1.2) {
+	if (input_check("down"))
+	{
+		if (abs(x_vel_current) > walk_speed_standard*1.2)
+		{
 			set_state(player_state_slide);
-		} else {
-			crouch_multiplier_current = crouch_multiplier;
+		} else
+		{
+			set_state(player_state_crouch);
 		}
-	} else crouch_multiplier_current = 1;
+	}
 	
-	//sprite switching
-	if (sprite_index = spr_land && abs(x_vel_current) > 1) set_sprite(spr_idle,true,0.5);
-	if (animation_end() && sprite_index = spr_land) set_sprite(spr_idle,true,0.5);
+	if (animation_end() && (sprite_index = spr_land || sprite_index = spr_roll))
+	{
+		if (xinput != 0)
+		{
+			set_sprite(spr_walk,,abs(x_vel_current)/step_size);
+		} else 
+		{
+			set_sprite(spr_idle,true,0.5);
+		}
+	}
 	
-	if (sprite_index != spr_land) {
-		if (xinput = 0) {
-			if (x_vel_current != 0) {
+	if (sprite_index != spr_land && sprite_index != spr_roll)
+	{
+		if (xinput = 0)
+		{
+			if (abs(x_vel_current) >= walk_speed_standard) {
 				set_state(player_state_skid);
-			} else if (input_check("down")) {
-				set_sprite(spr_crouch,,0.5);
 			} else {
 				set_sprite(spr_idle,,0.5);
 			}
-		} else {
-			if (sign(xinput) != sign(x_vel_current) && abs(x_vel_current) >= walk_speed_standard) set_state(player_state_skid);
-			if (input_check("down")) {
-				set_sprite(spr_crouch_walk,,abs(x_vel_current)/step_size);
-			} else {
-				if (abs(x_vel_current) > walk_speed_standard) {
+		} else
+		{
+			if (sign(xinput) != sign(x_vel_current) && abs(x_vel_current) >= walk_speed_standard)
+			{
+				set_state(player_state_skid);
+			} else
+			{
+				if (abs(x_vel_current) > walk_speed_standard)
+				{
 					set_sprite(spr_run,,abs(x_vel_current)/step_size);
-				} else {
+				} else
+				{
 					set_sprite(spr_walk,,abs(x_vel_current)/step_size);
 				}
 			}
 		}
-		
 	}
+
 
 	player_jump_ground();	
 	player_input_jump();	
 	player_input_ladder();	
-	player_input_dash();
-	
+	player_input_grapple();	
 	horizontal_movement();	
 	vertical_movement();
 	
@@ -55,7 +73,36 @@ function player_state_ground() {
 	wall_dir = xinput;
 }
 
-function player_state_jump() {
+function player_state_crouch()
+{
+	if (xinput == 0)
+	{
+		set_sprite(spr_crouch_idle,,0.5);		
+	} else 
+	{
+		set_sprite(spr_crouch_walk,,abs(x_vel_current)/step_size);
+	}
+	
+	player_jump_ground();	
+	player_input_jump();	
+	player_input_ladder();	
+	player_input_grapple();
+	
+	horizontal_movement();	
+	vertical_movement();
+	
+	if (!input_check("down") && !place_meeting(x,bbox_bottom-sprite_get_height(spr_player_mask_stand),par_solid))
+	{
+		set_state(player_state_ground);	
+	}
+	
+	if (!on_ground()) set_state(player_state_air);
+	
+	wall_dir = xinput;
+}
+
+function player_state_jump()
+{
 	
 	if (animation_end()) image_speed = 0;
 	
@@ -74,7 +121,7 @@ function player_state_jump() {
 	
 	player_input_ladder();
 	
-	player_input_dash();
+	player_input_grapple();
 	
 	horizontal_movement();
 	
@@ -85,7 +132,8 @@ function player_state_jump() {
 	}
 }
 
-function player_state_air() {
+function player_state_air()
+{
 	
 	if (animation_end()) image_speed = 0;
 	
@@ -98,7 +146,7 @@ function player_state_air() {
 	
 	player_input_walljump();
 	
-	player_input_dash();
+	player_input_grapple();
 	
 	player_input_ladder();
 	
@@ -111,7 +159,8 @@ function player_state_air() {
 	}		
 }
 
-function player_state_glide() {
+function player_state_glide()
+{
 	
 	can_jump--;
 	jump_buffer--;	
@@ -138,7 +187,7 @@ function player_state_glide() {
 	
 	player_input_walljump();
 	
-	player_input_dash();
+	player_input_grapple();
 	
 	player_input_ladder();
 	
@@ -151,7 +200,8 @@ function player_state_glide() {
 	if (on_ground()) set_state(player_state_ground);	
 }
 
-function player_state_cling() {
+function player_state_cling()
+{
 	
 	if animation_end()	image_speed = 0;
 	
@@ -180,7 +230,7 @@ function player_state_cling() {
 	
 	player_jump_ground()
 	
-	player_input_dash();
+	player_input_grapple();
 	
 	vertical_movement();	
 	
@@ -190,7 +240,8 @@ function player_state_cling() {
 	}
 }
 
-function player_state_ladder() {
+function player_state_ladder()
+{
 		if (sprite_index != spr_player_ladder) {
 			y_vel_current = 0;
 			image_index = 0;
@@ -202,12 +253,13 @@ function player_state_ladder() {
 		y_vel_current = _yinput * climb_speed;
 		image_index += _yinput;
 		
-		player_input_dash();
+		player_input_grapple();
 		
 		player_input_jump();
 }
 
-function player_state_skid() {
+function player_state_skid()
+{
 
 	if (animation_end()) image_speed = 0;
 	
@@ -224,14 +276,16 @@ function player_state_skid() {
 	
 	player_input_jump();
 	
-	player_input_dash();
+	player_input_grapple();
 	
 	vertical_movement();	
 	
 	x_vel_current = approach(x_vel_current,0,acceleration_current*braking_current*resistance_current*friction_current*global.time_dilation_current);
 }
 
-function player_state_slide() {
+function player_state_slide()
+{
+	//set_sprite(spr_slide,,0.5);
 	
 	if (animation_end()) image_speed = 0;	
 	
@@ -239,25 +293,32 @@ function player_state_slide() {
 	
 	player_input_jump();
 	
-	player_input_dash();
+	player_input_grapple();
 	
 	x_vel_current = approach(x_vel_current,0,acceleration_current*braking_current*resistance_current*friction_current*global.time_dilation_current);
 	
 	vertical_movement();
 	
-	if (on_ground() && ((slide_dir ? x_vel_current <= 0 : x_vel_current >= 0) || !input_check("down"))) set_state(player_state_ground);
+	if (!input_check("down") && !place_meeting(x,bbox_bottom-sprite_get_height(spr_player_mask_stand),par_solid)) {
+		set_state(player_state_ground);	
+	}
 	
+	if ((slide_dir ? x_vel_current <= 0 : x_vel_current >= 0))
+	{
+		set_state(player_state_crouch);
+	}
 	if (!on_ground()) set_state(player_state_air);
 	
 }
 
-function player_state_grapple() {
+function player_state_grapple()
+{
 	
 	var _chain_angle_acceleration = -0.2 * dcos(chain_direction);
 	
 	_chain_angle_acceleration += xinput * acceleration_current;
 	
-	chain_length += yinput * 3; //approach(chain_length,32,(1/chain_length)*max_chain_length*y_vel_max*1.5)
+	chain_length = clamp(chain_length+yinput * 3,0,grapple_distance_max); //approach(chain_length,32,(1/chain_length)*max_chain_length*y_vel_max*1.5)
 	chain_angle_velocity += _chain_angle_acceleration;
 	chain_direction += chain_angle_velocity;
 	chain_angle_velocity *= 0.99;
@@ -288,7 +349,8 @@ function player_state_grapple() {
 	
 }
 
-function player_state_dash() {
+function player_state_dash()
+{
 	global.time_dilation_target = global.time_dilation_standard;
 	dash_timer_current--;
 	x_vel_current = lengthdir_x(dash_speed,dash_direction);
@@ -303,7 +365,8 @@ function player_state_dash() {
 	}
 }
 
-function player_state_dash_targeting() {
+function player_state_dash_targeting()
+{
 	default_stats();
 	set_sprite(sprite_index,false,min(image_speed,global.time_dilation_current));
 }

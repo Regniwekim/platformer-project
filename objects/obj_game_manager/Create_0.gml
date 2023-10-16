@@ -5,7 +5,7 @@
 global.multijump_max = 0;
 global.walljump_unlocked = 0;
 global.dash_unlocked = 0;
-global.bash_unlocked = 1;
+global.bash_unlocked = 0;
 global.glider_unlocked = 0;
 global.grapple_unlocked = 0;
 global.slowmo_unlocked = 0;
@@ -13,7 +13,7 @@ global.slowmo_unlocked = 0;
 
 #region time control
 global.time_dilation_standard = 1;
-global.time_dilation_slow = 0.2;
+global.time_dilation_slow = 0.1;
 global.time_dilation_target = global.time_dilation_standard;
 global.time_dilation_current = global.time_dilation_standard;
 #endregion
@@ -44,6 +44,10 @@ camera_initialized = false;
 
 #endregion
 
+#region particles
+global.bg_particle_system = part_system_create_layer("lay_bg_particles",true);
+global.mg_particle_system = part_system_create_layer("lay_mg_particles",true);
+global.fg_particle_system = part_system_create_layer("lay_fg_particles",true);
 room_goto(rm_demo);
 
 global.debug = false;

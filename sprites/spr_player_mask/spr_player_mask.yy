@@ -25,8 +25,8 @@
   "nineSlice": null,
   "origin": 7,
   "parent": {
-    "name": "Player",
-    "path": "folders/Sprites/Player.yy",
+    "name": "Collision Masks",
+    "path": "folders/Sprites/Player/Collision Masks.yy",
   },
   "preMultiplyAlpha": false,
   "sequence": {
