@@ -13,6 +13,7 @@ spr_land = spr_player_land;
 spr_roll = spr_player_roll;
 spr_wall_slide = spr_player_wall_slide;
 spr_wall_land = spr_player_wall_land;
+spr_wall_climb = spr_player_wall_climb;
 spr_crouch_idle = spr_player_crouch_idle;
 spr_crouch_walk = spr_player_crouch_walk;
 
@@ -102,14 +103,14 @@ xscale = image_xscale;
 grapple_hook = noone;
 grapple_point = noone;
 grapple_direction = 0;
-grapple_distance_max = 160;
+grapple_distance_max = 320;
 chain_length = 0;
 max_chain_length = 0;
 chain_direction = 0;
 chain_angle_velocity = 0;
 chain_x = x;
 chain_y = y;
-
+grapple_reel_active = false;
 
 dash_timer_max = 6;
 dash_timer_current = dash_timer_max;
@@ -119,6 +120,10 @@ dash_distance_max = 120;
 dash_targeting = false;
 dash_point = noone;
 dash_speed = 15;
+
+climbing_speed = 4;
+
+can_walk = true;
 
 state = player_state_ground;
 state_previous = state;

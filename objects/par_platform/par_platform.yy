@@ -1,15 +1,15 @@
 {
   "resourceType": "GMObject",
   "resourceVersion": "1.0",
-  "name": "obj_oneway",
+  "name": "par_platform",
   "eventList": [
     {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":2,"eventType":3,"isDnD":false,},
   ],
   "managed": true,
   "overriddenProperties": [],
   "parent": {
-    "name": "Terrain",
-    "path": "folders/Objects/Terrain.yy",
+    "name": "Objects",
+    "path": "folders/Objects.yy",
   },
   "parentObjectId": null,
   "persistent": false,
@@ -30,10 +30,7 @@
     {"resourceType":"GMObjectProperty","resourceVersion":"1.0","name":"y_vel","filters":[],"listItems":[],"multiselect":false,"rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"value":"0","varType":0,},
   ],
   "solid": false,
-  "spriteId": {
-    "name": "spr_oneway_digital",
-    "path": "sprites/spr_oneway_digital/spr_oneway_digital.yy",
-  },
+  "spriteId": null,
   "spriteMaskId": null,
   "visible": true,
 }

@@ -1,0 +1,1 @@
+draw_sprite_ext(sprite_index,image_index,x+(random_range(-charge_current,charge_current)/6),y+(random_range(-charge_current,charge_current)/6),image_xscale,image_yscale,image_angle,image_blend,image_alpha);

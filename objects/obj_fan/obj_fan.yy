@@ -2,9 +2,7 @@
   "resourceType": "GMObject",
   "resourceVersion": "1.0",
   "name": "obj_fan",
-  "eventList": [
-    {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,},
-  ],
+  "eventList": [],
   "managed": true,
   "overriddenProperties": [],
   "parent": {
@@ -12,8 +10,8 @@
     "path": "folders/Objects/Terrain.yy",
   },
   "parentObjectId": {
-    "name": "par_solid",
-    "path": "objects/par_solid/par_solid.yy",
+    "name": "obj_wall",
+    "path": "objects/obj_wall/obj_wall.yy",
   },
   "persistent": false,
   "physicsAngularDamping": 0.1,

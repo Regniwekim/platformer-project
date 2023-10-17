@@ -158,6 +158,7 @@ if (abs(camera_current_x - camera_target_x) < global.view_width && abs(camera_cu
 	camera_current_y = camera_target_y;
 }
 
+camera_set_view_angle(view, random_range(-global.screen_shake,global.screen_shake));
 camera_set_view_pos(view,camera_current_x+random_range(-global.screen_shake,global.screen_shake),camera_current_y+random_range(-global.screen_shake,global.screen_shake));
 
 #endregion

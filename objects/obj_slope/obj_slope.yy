@@ -12,8 +12,8 @@
     "path": "folders/Objects/Colliders.yy",
   },
   "parentObjectId": {
-    "name": "par_solid",
-    "path": "objects/par_solid/par_solid.yy",
+    "name": "obj_wall",
+    "path": "objects/obj_wall/obj_wall.yy",
   },
   "persistent": false,
   "physicsAngularDamping": 0.1,

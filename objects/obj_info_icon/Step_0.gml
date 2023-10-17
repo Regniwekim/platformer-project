@@ -39,5 +39,4 @@ switch (draw_direction) {
 	yy = bbox_top + (sprite_get_height(sprite_index)/2);
 	break;
 }
-my_input_icon =  input_binding_get_icon(input_binding_get(my_input));
 }

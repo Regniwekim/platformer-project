@@ -6,11 +6,11 @@ function actor_collision()
 // set threshold based on speed
 var _tolerance = 1 +  ceil(abs(x_vel_current));
 // walking into a wall or upward _slope
-if (place_meeting(x + x_vel_current, y, par_solid)) {
+if (place_meeting(x + x_vel_current, y, obj_wall)) {
 	    var _slope = false;
 	    // moving up slopes
 	for (var i = 1; i <= _tolerance; i++) {
-	        if (!place_meeting(x + x_vel_current, y - i, par_solid) && !place_meeting(x + x_vel_current, y - i, obj_oneway_stairs)) {
+	        if (!place_meeting(x + x_vel_current, y - i, obj_wall) && !place_meeting(x + x_vel_current, y - i, obj_oneway_stairs)) {
 	            _slope = true;
 	            y -= i;
 	            break;
@@ -19,7 +19,7 @@ if (place_meeting(x + x_vel_current, y, par_solid)) {
 
 	// not a _slope? then it’s a wall
 	if (!_slope) {
-	        while (!place_meeting(x + sign(x_vel_current), y, par_solid)) {
+	        while (!place_meeting(x + sign(x_vel_current), y, obj_wall)) {
 	        x += sign(x_vel_current);
 	    }
 	    x_vel_current = 0;
@@ -34,7 +34,7 @@ if (place_meeting(x + x_vel_current, y, par_solid)) {
 else if (on_ground()) {
 	    // moving down slopes
 	for (var i = 0; i <= _tolerance; i++) {
-	        if (!place_meeting(x + x_vel_current, y + i + 1, par_solid)) {
+	        if (!place_meeting(x + x_vel_current, y + i + 1, obj_wall)) {
 	            y += i;
 	            break;
 	        }
@@ -44,8 +44,8 @@ else if (on_ground()) {
 x += x_vel_current*global.time_dilation_current;
 
 // note that vertical code has NO _slope logic
-if (place_meeting(x, y + y_vel_current, par_solid)) {
-	while (!place_meeting(x, y + sign(y_vel_current), par_solid)) {
+if (place_meeting(x, y + y_vel_current, obj_wall)) {
+	while (!place_meeting(x, y + sign(y_vel_current), obj_wall)) {
 	        y += sign(y_vel_current);
 	}
 	y_vel_current = 0;
@@ -57,8 +57,8 @@ if (place_meeting(x, y + y_vel_current, par_solid)) {
 
 
 //one way platform collisions
-if (place_meeting(x, y + y_vel_current, obj_oneway) && y_vel_current > 0 && !place_meeting(x,y,obj_oneway)) {
-	while (!place_meeting(x, y + 1,obj_oneway)) {
+if (place_meeting(x, y + y_vel_current, obj_horizontal_oneway) && y_vel_current > 0 && !place_meeting(x,y,obj_horizontal_oneway)) {
+	while (!place_meeting(x, y + 1,obj_horizontal_oneway)) {
 		y++;
 	}
 	y_vel_current = 0;		
@@ -68,16 +68,19 @@ y += y_vel_current*global.time_dilation_current;
 
 }
 
-function horizontal_movement() {
+function horizontal_movement()
+{
 	walk_speed_current = walk_speed_standard * walk_speed_multiplier * resistance_current;
 	x_vel_current = approach(x_vel_current,walk_speed_current*xinput,acceleration_current*braking_current*resistance_current*friction_current*global.time_dilation_current);
 }
 
-function vertical_movement() {
+function vertical_movement()
+{
 	y_vel_current = approach(y_vel_current, y_vel_max * gravity_multiplier, gravity_current*global.time_dilation_current);
 }
 
-function default_stats() {
+function default_stats()
+{
 	acceleration_multiplier = 1;
 	braking_multiplier = 1;
 	jump_height_multiplier = 1;
@@ -91,7 +94,9 @@ function default_stats() {
 	global.time_dilation_target = global.time_dilation_standard;
 	//dash_targeting = false;
 }
-function set_state(_state) {
+
+function set_state(_state)
+{
 	//execute state leave
 	if (state != _state) {
 		leave_state(state);
@@ -99,7 +104,8 @@ function set_state(_state) {
 	}
 }
 
-function leave_state(_state) {
+function leave_state(_state)
+{
 	switch (_state) {
 		case player_state_ground:
 			break;
@@ -139,19 +145,21 @@ function leave_state(_state) {
 	state_previous = state;
 }
 
-function enter_state(_state) {
+function enter_state(_state)
+{
 	switch (_state) {
 		#region ground
 		case player_state_ground:
 			if (state_previous = player_state_air || state_previous = player_state_jump || state_previous = player_state_glide || state_previous = player_state_grapple)
 			{
-				if (abs(x_vel_current) >= walk_speed_standard)
+				var _vel = point_distance(0,0,x_vel_current,y_vel_current);
+				if (_vel > walk_speed_standard*run_multiplier*0.75 && abs(x_vel_current) > 1)
 				{
-					set_sprite(spr_roll,true,1);	
+					set_sprite(spr_roll,true,1);
 				}
 				else
 				{
-					set_sprite(spr_land,true,0.5);
+					set_sprite(spr_land,true,1);
 				}
 			} else
 			{
@@ -193,7 +201,7 @@ function enter_state(_state) {
 		case player_state_air:
 			default_stats();
 			resistance_multiplier = resistance_air;
-			set_sprite(spr_fall,true,1);			
+			set_sprite(spr_fall,true,1);
 			break;
 		#endregion
 		
@@ -206,6 +214,15 @@ function enter_state(_state) {
 			set_sprite(spr_wall_land,true,1)
 			break;
 		#endregion
+		
+		case player_state_wallclimb:
+			default_stats();			
+			gravity_multiplier = 0;
+			multijump_current = global.multijump_max;
+			dash_count_current = dash_count_max;
+			set_sprite(spr_wall_land,true,1)
+			break;
+			break
 		
 		#region glide
 		case player_state_glide:
@@ -225,9 +242,9 @@ function enter_state(_state) {
 		
 		#region grapple
 		case player_state_grapple:
+			default_stats();
 			set_sprite(spr_glide,true,0);
 			image_index = image_number-1;
-			default_stats();
 			multijump_current = global.multijump_max;
 			dash_count_current = dash_count_max;
 			resistance_multiplier = resistance_air;
@@ -237,6 +254,7 @@ function enter_state(_state) {
 			chain_x = x;
 			chain_y = y;
 			chain_angle_velocity = x_vel_current;
+			grapple_reel_active = false;
 			break;
 		#endregion
 		
@@ -290,22 +308,25 @@ function enter_state(_state) {
 	state = _state;
 }
 
-function on_ground() {
-	return (place_meeting(x,y+1,par_solid) || (place_meeting(x,y+1,obj_oneway) && !place_meeting(x,y,obj_oneway)));
+function on_ground()
+{
+	return (place_meeting(x,y+1,par_platform) && !place_meeting(x,y,par_platform));
 }
 
-function is_state() {
+function is_state()
+{
 	for (var i=0;i<argument_count;i++) {
 		if (state = argument[i]) return true;
 	}
 }
 
-function on_oneway() {
-	var _on_oneway = place_meeting(x,y+1,obj_oneway);
+function on_oneway()
+{
+	var _on_oneway = place_meeting(x,y+1,obj_horizontal_oneway);
 	
 	if !_on_oneway return noone;
 	
-	var _inside_oneway = place_meeting(x,y,obj_oneway);
+	var _inside_oneway = place_meeting(x,y,obj_horizontal_oneway);
 	
 	if !_inside_oneway return _on_oneway;
 	
@@ -314,9 +335,18 @@ function on_oneway() {
 	return _on_oneway;
 }
 
-function player_input_jump() {
-	if (input_check_pressed("jump")) { //drop through one way
-		if (place_meeting(x,y+1,obj_oneway) && input_check("down")) {
+function player_input_jump()
+{
+	if (input_check_pressed("jump"))
+		
+		{
+		var _plat = instance_place(x,y+2,par_platform)
+		if (instance_exists(_plat))
+		{
+			x_vel_current += _plat.x_vel;
+		}
+		if (place_meeting(x,y+1,obj_horizontal_oneway) && input_check("down"))
+		{
 			y++;
 			set_state(player_state_air);
 		}
@@ -325,7 +355,7 @@ function player_input_jump() {
 		y_vel_current = -jump_height_current;
 		set_state(player_state_jump);
 			
-		} else if (place_meeting(x,y+(y_vel_current*coyote_time),par_solid) && y_vel_current > 0) { //jump buffer
+		} else if (place_meeting(x,y+(y_vel_current*coyote_time),obj_wall) && y_vel_current > 0) { //jump buffer
 			jump_buffer = coyote_time;
 	
 		} else if (multijump_current > 0) { //multijump
@@ -339,7 +369,8 @@ function player_input_jump() {
 	}
 }
 
-function player_jump_ground() {
+function player_jump_ground()
+{
 	if (jump_buffer > 0) {
 		y_vel_current = -jump_height_current;
 		set_state(player_state_jump);
@@ -350,10 +381,20 @@ function player_jump_ground() {
 	multijump_current = global.multijump_max;	
 }
 
-function player_input_walljump() {
-	if (global.walljump_unlocked && ((place_meeting(x+1,y,par_solid) && input_check("right")) || (place_meeting(x-1,y,par_solid) && input_check("left")))) {
-		set_state(player_state_cling);	
-	}	
+function player_input_wallcling() {
+	
+	if (((place_meeting(bbox_right+1,y,obj_wall) && input_check("right")) || (place_meeting(bbox_left-1,y,obj_wall) && input_check("left"))) && global.walljump_unlocked && !global.wallclimb_unlocked)
+	{
+		set_state(player_state_cling);
+	}
+}
+
+function player_input_wallclimb()
+{
+	if (place_meeting(facing ? bbox_right+1 : bbox_left-1,y,obj_wall) && (facing ? input_check("right") : input_check("left")) && global.wallclimb_unlocked)
+	{
+		set_state(player_state_wallclimb);
+	}
 }
 
 function player_input_ladder() {
@@ -369,36 +410,24 @@ function player_input_glide() {
 }
 
 function player_input_grapple() {
-	var _nearest_grapple_point = instance_nearest(x,y-(sprite_get_height(sprite_index)/2),obj_grapple_point);
-	if (input_check_pressed("grapple") && global.grapple_unlocked) {
-		if (instance_exists(grapple_hook)) {
-			instance_destroy(grapple_hook,true);
-			with (obj_grapple_point) {
-				active = 0;	
-			}				
-		} else {
-			if (instance_exists(_nearest_grapple_point) && point_distance(x,y-(sprite_get_height(sprite_index)/2),_nearest_grapple_point.x,_nearest_grapple_point.y) < grapple_distance_max) {
-				with (obj_grapple_point) {
-					active = 0;	
-				}
-				_nearest_grapple_point.active = 1;
-				grapple_direction = point_direction(x,y-(sprite_get_height(sprite_index)/2),_nearest_grapple_point.x,_nearest_grapple_point.y);
-				grapple_hook = instance_create_depth(x,y-(sprite_get_height(sprite_index)/2),depth+1,obj_grapple_hook);
-				with (grapple_hook) {
-					rotation = other.grapple_direction;
-				}
-					
+	if (input_check_pressed("grapple") && global.grapple_unlocked)
+	{
+		if (instance_exists(grapple_hook))
+		{
+			instance_destroy(grapple_hook,true);			
+		} else
+		{
+			grapple_direction = aim_direction;
+			grapple_hook = instance_create_depth(x,y-(sprite_get_height(sprite_index)/2),depth+1,obj_grapple_hook);
+			with (grapple_hook)
+			{
+				rotation = other.grapple_direction;
 			}
+					
 		}
-	} else {
-		with (obj_grapple_point) {
-				active = 0;	
-			}	
 	}
-	if (!input_check("grapple") && instance_exists(grapple_hook)) {
-		with (obj_grapple_point) {
-				active = 0;	
-		}
+	if (!input_check("grapple") && instance_exists(grapple_hook))
+	{
 		instance_destroy(grapple_hook);
 	}
 }

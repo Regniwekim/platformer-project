@@ -26,10 +26,15 @@ input_icons_keyboard_and_mouse()
 .add("A", spr_keyboard_a)
 .add("S", spr_keyboard_s)
 .add("D", spr_keyboard_d)
+.add("arrow up", spr_keyboard_up)
+.add("arrow left", spr_keyboard_left)
+.add("arrow down", spr_keyboard_down)
+.add("arrow right", spr_keyboard_right)
 .add("space", spr_keyboard_space)
 .add("shift", spr_keyboard_shift)
 .add("Q", spr_keyboard_q)
 .add("mouse button left", spr_mouse_left_click)
+.add("mouse button right", spr_mouse_right_click)
 
 /*
         up:    [input_binding_key(vk_up),    input_binding_key("W")],

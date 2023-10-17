@@ -14,8 +14,8 @@
     "path": "folders/Objects/Terrain.yy",
   },
   "parentObjectId": {
-    "name": "obj_oneway",
-    "path": "objects/obj_oneway/obj_oneway.yy",
+    "name": "obj_horizontal_oneway",
+    "path": "objects/obj_horizontal_oneway/obj_horizontal_oneway.yy",
   },
   "persistent": false,
   "physicsAngularDamping": 0.1,
