@@ -1,3 +1,5 @@
+event_inherited();
+
 state = "idle";
 start_x = x;
 start_y = y;

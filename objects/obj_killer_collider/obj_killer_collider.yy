@@ -30,8 +30,8 @@
   ],
   "solid": false,
   "spriteId": {
-    "name": "spr_special_collider",
-    "path": "sprites/spr_special_collider/spr_special_collider.yy",
+    "name": "spr_killer_collider",
+    "path": "sprites/spr_killer_collider/spr_killer_collider.yy",
   },
   "spriteMaskId": null,
   "visible": false,

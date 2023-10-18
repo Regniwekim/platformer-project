@@ -93,7 +93,7 @@ function player_state_crouch()
 	horizontal_movement();	
 	vertical_movement();
 	
-	if (!input_check("down") && !collision_line(bbox_left,bbox_bottom-sprite_get_height(spr_player_mask_stand),bbox_right,bbox_bottom-sprite_get_height(spr_player_mask_stand),obj_wall,false,false))
+	if (!input_check("down") && !collision_line(bbox_left,bbox_bottom-sprite_get_height(spr_player_mask_stand),bbox_right,bbox_bottom-sprite_get_height(spr_player_mask_stand),par_collider,false,false))
 	{
 		set_state(player_state_ground);	
 	}
@@ -221,14 +221,14 @@ function player_state_cling()
 	if (y_vel_current < 0) y_vel_current *= 0.85;
 	if (y_vel_current > y_vel_max * gravity_multiplier) y_vel_current = approach(y_vel_current,y_vel_max * gravity_multiplier * global.time_dilation_current, gravity_current * 2 * global.time_dilation_current);
 	
-	if (input_check_pressed("jump") && (wall_dir ? place_meeting(bbox_right+1,y,obj_wall) : place_meeting(bbox_left-1,y,obj_wall))) {
+	if (input_check_pressed("jump") && (wall_dir ? place_meeting(bbox_right+1,y,par_collider) : place_meeting(bbox_left-1,y,par_collider))) {
 		x_vel_current = jump_height_current*-wall_dir*0.75;
 		y_vel_current = -jump_height_current;
 		wall_dir = -wall_dir;
 		set_state(player_state_jump);
 	}
 	
-	if ((place_meeting(x-1,y,obj_wall) && input_check("right")) || (place_meeting(x+1,y,obj_wall) && input_check("left")) || (!place_meeting(x-1,y,obj_wall) && !place_meeting(x+1,y,obj_wall))) {
+	if ((place_meeting(x-1,y,par_collider) && input_check("right")) || (place_meeting(x+1,y,par_collider) && input_check("left")) || (!place_meeting(x-1,y,par_collider) && !place_meeting(x+1,y,par_collider))) {
 		sticky_current--;	
 	} else {
 		sticky_current = sticky_max;	
@@ -261,7 +261,7 @@ function player_state_wallclimb()
 	y_vel_current = yinput*climbing_speed;
 	image_speed = -yinput/2;
 	
-	if (place_meeting(x-1,y,obj_wall)) 
+	if (place_meeting(x-1,y,par_collider)) 
 	{
 		wall_dir = 1;
 	} else{
@@ -275,7 +275,7 @@ function player_state_wallclimb()
 		set_state(player_state_jump);
 	}
 	
-	if ((place_meeting(x-1,y,obj_wall) && input_check("right")) || (place_meeting(x+1,y,obj_wall) && input_check("left")) || (!place_meeting(x-1,y,obj_wall) && !place_meeting(x+1,y,obj_wall))) {
+	if ((place_meeting(x-1,y,par_collider) && input_check("right")) || (place_meeting(x+1,y,par_collider) && input_check("left")) || (!place_meeting(x-1,y,par_collider) && !place_meeting(x+1,y,par_collider))) {
 		sticky_current--;	
 	} else {
 		sticky_current = sticky_max;	
@@ -302,7 +302,7 @@ function player_state_ladder()
 		}
 		sprite_index = spr_player_ladder;
 		gravity_multiplier = 0;
-		can_jump = coyote_time;
+		can_jump = coyote_time_frames;
 		y_vel_current = _yinput * climb_speed;
 		image_index += _yinput;
 		
@@ -352,7 +352,7 @@ function player_state_slide()
 	
 	vertical_movement();
 	
-	if (!input_check("down") && !collision_line(bbox_left,bbox_bottom-sprite_get_height(spr_player_mask_stand),bbox_right,bbox_bottom-sprite_get_height(spr_player_mask_stand),obj_wall,false,false))
+	if (!input_check("down") && !collision_line(bbox_left,bbox_bottom-sprite_get_height(spr_player_mask_stand),bbox_right,bbox_bottom-sprite_get_height(spr_player_mask_stand),par_collider,false,false))
 	{
 		set_state(player_state_ground);	
 	}

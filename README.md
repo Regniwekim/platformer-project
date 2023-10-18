@@ -12,4 +12,8 @@ Some Sound Effects from Chiptone by Tom Vian - https://sfbgames.itch.io/chiptone
 
 Monogram Font by datagoblin - https://datagoblin.itch.io/monogram
 
-Pixel Input Prompts by Kenney - 	https://kenney-assets.itch.io/input-prompts-pixel-16
+Pixel Input Prompts by Kenney - https://kenney-assets.itch.io/input-prompts-pixel-16
+
+Basic Platformer Template by badwrongg - https://github.com/badwrongg/gm_basic_platformer
+
+SnowState by sohomsahaun - https://github.com/sohomsahaun/SnowState

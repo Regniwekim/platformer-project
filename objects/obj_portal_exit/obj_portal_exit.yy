@@ -6,8 +6,8 @@
   "managed": true,
   "overriddenProperties": [],
   "parent": {
-    "name": "Colliders",
-    "path": "folders/Objects/Colliders.yy",
+    "name": "Terrain",
+    "path": "folders/Objects/Terrain.yy",
   },
   "parentObjectId": null,
   "persistent": false,
@@ -26,8 +26,8 @@
   "properties": [],
   "solid": false,
   "spriteId": {
-    "name": "spr_portal",
-    "path": "sprites/spr_portal/spr_portal.yy",
+    "name": "spr_portal_exit",
+    "path": "sprites/spr_portal_exit/spr_portal_exit.yy",
   },
   "spriteMaskId": null,
   "visible": false,

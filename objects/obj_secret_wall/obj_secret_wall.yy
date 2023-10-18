@@ -9,12 +9,12 @@
   "managed": true,
   "overriddenProperties": [],
   "parent": {
-    "name": "Colliders",
-    "path": "folders/Objects/Colliders.yy",
+    "name": "Camera Handlers",
+    "path": "folders/Objects/Managers/Camera Handlers.yy",
   },
   "parentObjectId": {
-    "name": "obj_camera_zone",
-    "path": "objects/obj_camera_zone/obj_camera_zone.yy",
+    "name": "obj_camera_blocker",
+    "path": "objects/obj_camera_blocker/obj_camera_blocker.yy",
   },
   "persistent": false,
   "physicsAngularDamping": 0.1,

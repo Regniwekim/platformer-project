@@ -6,13 +6,10 @@
   "managed": true,
   "overriddenProperties": [],
   "parent": {
-    "name": "Terrain",
-    "path": "folders/Objects/Terrain.yy",
+    "name": "Colliders",
+    "path": "folders/Objects/Colliders.yy",
   },
-  "parentObjectId": {
-    "name": "par_platform",
-    "path": "objects/par_platform/par_platform.yy",
-  },
+  "parentObjectId": null,
   "persistent": false,
   "physicsAngularDamping": 0.1,
   "physicsDensity": 0.5,

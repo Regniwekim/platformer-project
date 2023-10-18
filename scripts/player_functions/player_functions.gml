@@ -6,11 +6,11 @@ function actor_collision()
 // set threshold based on speed
 var _tolerance = 1 +  ceil(abs(x_vel_current));
 // walking into a wall or upward _slope
-if (place_meeting(x + x_vel_current, y, obj_wall)) {
+if (place_meeting(x + x_vel_current, y, par_collider)) {
 	    var _slope = false;
 	    // moving up slopes
 	for (var i = 1; i <= _tolerance; i++) {
-	        if (!place_meeting(x + x_vel_current, y - i, obj_wall) && !place_meeting(x + x_vel_current, y - i, obj_oneway_stairs)) {
+	        if (!place_meeting(x + x_vel_current, y - i, par_collider) && !place_meeting(x + x_vel_current, y - i, obj_oneway_stairs)) {
 	            _slope = true;
 	            y -= i;
 	            break;
@@ -19,12 +19,12 @@ if (place_meeting(x + x_vel_current, y, obj_wall)) {
 
 	// not a _slope? then it’s a wall
 	if (!_slope) {
-	        while (!place_meeting(x + sign(x_vel_current), y, obj_wall)) {
+	        while (!place_meeting(x + sign(x_vel_current), y, par_collider)) {
 	        x += sign(x_vel_current);
 	    }
 	    x_vel_current = 0;
 	}
-	if (state == player_state_grapple) {
+	if (active_state == player_state_grapple) {
 		chain_direction = point_direction(grapple_hook.x,grapple_hook.y,x,y);
 		chain_angle_velocity = 0;
 	}
@@ -34,7 +34,7 @@ if (place_meeting(x + x_vel_current, y, obj_wall)) {
 else if (on_ground()) {
 	    // moving down slopes
 	for (var i = 0; i <= _tolerance; i++) {
-	        if (!place_meeting(x + x_vel_current, y + i + 1, obj_wall)) {
+	        if (!place_meeting(x + x_vel_current, y + i + 1, par_collider)) {
 	            y += i;
 	            break;
 	        }
@@ -44,12 +44,12 @@ else if (on_ground()) {
 x += x_vel_current*global.time_dilation_current;
 
 // note that vertical code has NO _slope logic
-if (place_meeting(x, y + y_vel_current, obj_wall)) {
-	while (!place_meeting(x, y + sign(y_vel_current), obj_wall)) {
+if (place_meeting(x, y + y_vel_current, par_collider)) {
+	while (!place_meeting(x, y + sign(y_vel_current), par_collider)) {
 	        y += sign(y_vel_current);
 	}
 	y_vel_current = 0;
-	if (state == player_state_grapple) {
+	if (active_state == player_state_grapple) {
 		chain_direction = point_direction(grapple_hook.x,grapple_hook.y,x,y);
 		chain_angle_velocity = 0;
 	}
@@ -81,6 +81,8 @@ function vertical_movement()
 
 function default_stats()
 {
+	horizontal_move = true;
+	vertical_move = true;
 	acceleration_multiplier = 1;
 	braking_multiplier = 1;
 	jump_height_multiplier = 1;
@@ -97,9 +99,9 @@ function default_stats()
 
 function set_state(_state)
 {
-	//execute state leave
-	if (state != _state) {
-		leave_state(state);
+	//execute active_state leave
+	if (active_state != _state) {
+		leave_state(active_state);
 		enter_state(_state);
 	}
 }
@@ -142,7 +144,7 @@ function leave_state(_state)
 			//do nothing
 			break;
 	}
-	state_previous = state;
+	state_previous = active_state;
 }
 
 function enter_state(_state)
@@ -150,6 +152,8 @@ function enter_state(_state)
 	switch (_state) {
 		#region ground
 		case player_state_ground:
+			horizontal_move = true;
+			vertical_move = true;
 			if (state_previous = player_state_air || state_previous = player_state_jump || state_previous = player_state_glide || state_previous = player_state_grapple)
 			{
 				var _vel = point_distance(0,0,x_vel_current,y_vel_current);
@@ -173,6 +177,8 @@ function enter_state(_state)
 		
 		#region crouch
 		case player_state_crouch:
+			horizontal_move = true;
+			vertical_move = true;
 			default_stats();
 			walk_speed_multiplier = crouch_multiplier;
 			mask_index = spr_player_mask_crouch;
@@ -181,6 +187,8 @@ function enter_state(_state)
 		
 		#region jump
 		case player_state_jump:
+			horizontal_move = true;
+			vertical_move = true;
 			default_stats();
 			resistance_multiplier = resistance_air;
 			if (sprite_index != spr_air_jump)
@@ -199,6 +207,7 @@ function enter_state(_state)
 		
 		#region air
 		case player_state_air:
+			
 			default_stats();
 			resistance_multiplier = resistance_air;
 			set_sprite(spr_fall,true,1);
@@ -305,18 +314,18 @@ function enter_state(_state)
 		#endregion
 
 	}
-	state = _state;
+	active_state = _state;
 }
 
 function on_ground()
 {
-	return (place_meeting(x,y+1,par_platform) && !place_meeting(x,y,par_platform));
+	return (place_meeting(x,y+1,par_collider));
 }
 
 function is_state()
 {
 	for (var i=0;i<argument_count;i++) {
-		if (state = argument[i]) return true;
+		if (active_state = argument[i]) return true;
 	}
 }
 
@@ -340,11 +349,12 @@ function player_input_jump()
 	if (input_check_pressed("jump"))
 		
 		{
-		var _plat = instance_place(x,y+2,par_platform)
+		var _plat = instance_place(x,y+2,par_collider);
 		if (instance_exists(_plat))
 		{
 			x_vel_current += _plat.x_vel;
 		}
+		
 		if (place_meeting(x,y+1,obj_horizontal_oneway) && input_check("down"))
 		{
 			y++;
@@ -355,8 +365,8 @@ function player_input_jump()
 		y_vel_current = -jump_height_current;
 		set_state(player_state_jump);
 			
-		} else if (place_meeting(x,y+(y_vel_current*coyote_time),obj_wall) && y_vel_current > 0) { //jump buffer
-			jump_buffer = coyote_time;
+		} else if (place_meeting(x,y+(y_vel_current*coyote_time_frames),par_collider) && y_vel_current > 0) { //jump buffer
+			jump_buffer = coyote_time_frames;
 	
 		} else if (multijump_current > 0) { //multijump
 			if (sprite_index != spr_air_jump) {
@@ -377,13 +387,13 @@ function player_jump_ground()
 	}
 	
 	jump_buffer = 0;
-	can_jump = coyote_time;
+	can_jump = coyote_time_frames;
 	multijump_current = global.multijump_max;	
 }
 
 function player_input_wallcling() {
 	
-	if (((place_meeting(bbox_right+1,y,obj_wall) && input_check("right")) || (place_meeting(bbox_left-1,y,obj_wall) && input_check("left"))) && global.walljump_unlocked && !global.wallclimb_unlocked)
+	if (((place_meeting(bbox_right+1,y,par_collider) && input_check("right")) || (place_meeting(bbox_left-1,y,par_collider) && input_check("left"))) && global.walljump_unlocked && !global.wallclimb_unlocked)
 	{
 		set_state(player_state_cling);
 	}
@@ -391,7 +401,7 @@ function player_input_wallcling() {
 
 function player_input_wallclimb()
 {
-	if (place_meeting(facing ? bbox_right+1 : bbox_left-1,y,obj_wall) && (facing ? input_check("right") : input_check("left")) && global.wallclimb_unlocked)
+	if (place_meeting(facing ? bbox_right+1 : bbox_left-1,y,par_collider) && (facing ? input_check("right") : input_check("left")) && global.wallclimb_unlocked)
 	{
 		set_state(player_state_wallclimb);
 	}

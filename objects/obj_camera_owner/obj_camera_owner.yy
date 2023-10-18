@@ -8,8 +8,8 @@
   "managed": true,
   "overriddenProperties": [],
   "parent": {
-    "name": "Managers",
-    "path": "folders/Objects/Managers.yy",
+    "name": "Camera Handlers",
+    "path": "folders/Objects/Managers/Camera Handlers.yy",
   },
   "parentObjectId": null,
   "persistent": false,

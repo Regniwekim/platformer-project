@@ -8,10 +8,10 @@ camera_set_view_size(view, lerp(camera_width,global.view_width,0.1), lerp(camera
 	
 #region horizontal camera movement
 var _camera_zone_x_list = ds_list_create();
-if (collision_line(camera_current_x,obj_player.y-2,camera_current_x+global.view_width,obj_player.y-2,obj_camera_zone,false,false))
+if (collision_line(camera_current_x,obj_player.y-2,camera_current_x+global.view_width,obj_player.y-2,obj_camera_blocker,false,false))
 {
 
-	var _num_x = collision_line_list(camera_current_x,obj_player.y-2,camera_current_x+global.view_width,obj_player.y-2,obj_camera_zone,false,false,_camera_zone_x_list,false);
+	var _num_x = collision_line_list(camera_current_x,obj_player.y-2,camera_current_x+global.view_width,obj_player.y-2,obj_camera_blocker,false,false,_camera_zone_x_list,false);
 	if (_num_x > 0)
 	{
 		var _camera_zone_left = noone;
@@ -78,9 +78,9 @@ if (collision_line(camera_current_x,obj_player.y-2,camera_current_x+global.view_
 
 #region vertical camera movement
 var _camera_zone_y_list = ds_list_create();
-if (collision_line(obj_player.x,camera_current_y,obj_player.x,camera_current_y+global.view_height,obj_camera_zone,false,false)) {
+if (collision_line(obj_player.x,camera_current_y,obj_player.x,camera_current_y+global.view_height,obj_camera_blocker,false,false)) {
 		
-	var _num_y = collision_line_list(obj_player.x,camera_current_y,obj_player.x,camera_current_y+global.view_height,obj_camera_zone,false,false,_camera_zone_y_list,false);
+	var _num_y = collision_line_list(obj_player.x,camera_current_y,obj_player.x,camera_current_y+global.view_height,obj_camera_blocker,false,false,_camera_zone_y_list,false);
 	if (_num_y > 0) {
 		var _camera_zone_up = noone;
 		var _camera_zone_down = noone;
@@ -143,3 +143,5 @@ if (!part_system_exists(global.bg_particle_system))	global.mg_particle_system = 
 if (!part_system_exists(global.bg_particle_system))	global.fg_particles_system = part_system_create_layer("lay_fg_particles",false);
 */
 #endregion
+
+current_state = e_gamestate.room_load;

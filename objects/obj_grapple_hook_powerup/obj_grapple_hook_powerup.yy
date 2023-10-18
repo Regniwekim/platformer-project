@@ -7,7 +7,7 @@
   "overriddenProperties": [],
   "parent": {
     "name": "Powerups",
-    "path": "folders/Objects/Powerups.yy",
+    "path": "folders/Objects/Entities/Powerups.yy",
   },
   "parentObjectId": null,
   "persistent": false,

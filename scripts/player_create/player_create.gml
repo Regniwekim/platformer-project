@@ -41,6 +41,9 @@ acceleration_standard = 0.2; //0.046875????
 acceleration_multiplier = 1;
 acceleration_current = acceleration_standard*acceleration_multiplier
 
+friction_multiplier = 1;
+gravity_multiplier = 1;
+
 braking_standard = 1; //0.5
 braking_multiplier = 1;
 braking_current = braking_standard*braking_multiplier;
@@ -48,14 +51,6 @@ braking_current = braking_standard*braking_multiplier;
 jump_height_standard = 8;
 jump_height_multiplier = 1;
 jump_height_current = jump_height_standard*jump_height_multiplier;
-
-friction_stadard = 1; //0.046875
-friction_multiplier = 1;
-friction_current = friction_stadard*friction_multiplier;
-
-gravity_standard = 0.5;
-gravity_multiplier = 1;
-gravity_current = gravity_standard * gravity_multiplier;
 
 resistance_ground = 1;
 resistance_standard = resistance_ground;
@@ -73,8 +68,7 @@ y_vel_max = 10; //16
 jump_height_standard = 8;
 jump_height_multiplier = 1;
 jump_height_current = jump_height_standard*jump_height_multiplier;
-coyote_time = 6;
-can_jump = coyote_time;
+can_jump = coyote_time_frames;
 jump_buffer = 0;
 multijump_current = 0;
 

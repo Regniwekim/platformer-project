@@ -3,8 +3,8 @@ if (active) {
 	
 	braking_current = braking_standard*braking_multiplier;
 	jump_height_current = jump_height_standard*jump_height_multiplier;
-	friction_current = friction_stadard*friction_multiplier;
-	gravity_current = gravity_standard * gravity_multiplier;
+	//friction_current = friction_stadard*friction_multiplier;
+	//gravity_current = gravity_standard * gravity_multiplier;
 	jump_height_current = jump_height_standard*jump_height_multiplier;
 	
 	walk_speed_current = walk_speed_standard*walk_speed_multiplier*friction_current*resistance_current;

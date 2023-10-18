@@ -1,6 +1,3 @@
-/// @description Insert description here
-// You can write your code in this editor
-
 if (instance_exists(obj_player)) {
 	draw_chain = true;
 	chain_length = point_distance(x,y,obj_player.x,obj_player.y-(sprite_get_height(obj_player.sprite_index)/2));
@@ -16,7 +13,7 @@ if (instance_exists(obj_player)) {
 repeat(abs(vel)) {
 	var _xv = lengthdir_x(1,rotation);
 	var _yv = lengthdir_y(1,rotation);
-	if (!place_meeting(x+_xv,y+_yv,par_platform)) {
+	if (!place_meeting(x+_xv,y+_yv,par_collider)) {
 		x += _xv;
 		y += _yv;
 	} else {
@@ -30,8 +27,8 @@ repeat(abs(vel)) {
 	}
 }
 
-if (collision_circle(x,y,4,par_platform,false,false)) {
-	var _oneway = collision_circle(x,y,4,par_platform,false,false);
+if (collision_circle(x,y,4,par_collider,false,false)) {
+	var _oneway = collision_circle(x,y,4,par_collider,false,false);
 	x += _oneway.x_vel;
 	y += _oneway.y_vel;
 }

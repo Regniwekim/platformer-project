@@ -8,8 +8,8 @@
   "managed": true,
   "overriddenProperties": [],
   "parent": {
-    "name": "Colliders",
-    "path": "folders/Objects/Colliders.yy",
+    "name": "Terrain",
+    "path": "folders/Objects/Terrain.yy",
   },
   "parentObjectId": null,
   "persistent": false,

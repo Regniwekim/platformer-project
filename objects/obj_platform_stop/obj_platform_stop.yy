@@ -6,8 +6,8 @@
   "managed": true,
   "overriddenProperties": [],
   "parent": {
-    "name": "Colliders",
-    "path": "folders/Objects/Colliders.yy",
+    "name": "Parents",
+    "path": "folders/Objects/Colliders/Parents.yy",
   },
   "parentObjectId": null,
   "persistent": false,
