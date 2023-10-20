@@ -24,7 +24,7 @@ if (place_meeting(x + x_vel_current, y, par_collider)) {
 	    }
 	    x_vel_current = 0;
 	}
-	if (active_state == player_state_grapple) {
+	if (state == player_state_grapple) {
 		chain_direction = point_direction(grapple_hook.x,grapple_hook.y,x,y);
 		chain_angle_velocity = 0;
 	}
@@ -49,7 +49,7 @@ if (place_meeting(x, y + y_vel_current, par_collider)) {
 	        y += sign(y_vel_current);
 	}
 	y_vel_current = 0;
-	if (active_state == player_state_grapple) {
+	if (state == player_state_grapple) {
 		chain_direction = point_direction(grapple_hook.x,grapple_hook.y,x,y);
 		chain_angle_velocity = 0;
 	}
@@ -81,6 +81,7 @@ function vertical_movement()
 
 function default_stats()
 {
+	//get_sprite();
 	horizontal_move = true;
 	vertical_move = true;
 	acceleration_multiplier = 1;
@@ -89,19 +90,18 @@ function default_stats()
 	friction_multiplier = 1;
 	gravity_multiplier = 1;
 	jump_height_multiplier = 1;
-	sticky_current = sticky_max;
 	resistance_multiplier = resistance_standard;
-	dash_timer_current = dash_timer_max;
 	mask_index = spr_player_mask_stand;
 	global.time_dilation_target = global.time_dilation_standard;
-	//dash_targeting = false;
+	dash_timer_current = dash_timer_max;
+	sticky_current = sticky_max;
 }
 
 function set_state(_state)
 {
-	//execute active_state leave
-	if (active_state != _state) {
-		leave_state(active_state);
+	//execute state leave
+	if (state != _state) {
+		leave_state(state);
 		enter_state(_state);
 	}
 }
@@ -144,7 +144,7 @@ function leave_state(_state)
 			//do nothing
 			break;
 	}
-	state_previous = active_state;
+	state_previous = state;
 }
 
 function enter_state(_state)
@@ -314,18 +314,18 @@ function enter_state(_state)
 		#endregion
 
 	}
-	active_state = _state;
+	state = _state;
 }
 
 function on_ground()
 {
-	return (place_meeting(x,y+1,par_collider));
+	return (place_meeting(x,y+1,par_collider) ||(place_meeting(x,y+1,obj_horizontal_oneway) && !place_meeting(x,y,obj_horizontal_oneway)));
 }
 
 function is_state()
 {
 	for (var i=0;i<argument_count;i++) {
-		if (active_state = argument[i]) return true;
+		if (state = argument[i]) return true;
 	}
 }
 
@@ -357,7 +357,7 @@ function player_input_jump()
 		
 		if (place_meeting(x,y+1,obj_horizontal_oneway) && input_check("down"))
 		{
-			y++;
+			y+=2;
 			set_state(player_state_air);
 		}
 		
@@ -388,7 +388,7 @@ function player_jump_ground()
 	
 	jump_buffer = 0;
 	can_jump = coyote_time_frames;
-	multijump_current = global.multijump_max;	
+	multijump_current = global.multijump_max;
 }
 
 function player_input_wallcling() {

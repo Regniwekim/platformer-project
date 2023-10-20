@@ -27,15 +27,37 @@ acceleration_current = acceleration_standard;
 resistance_current = resistance_standard;
 jump_height_current = jump_height_standard;
 
-active_state  = actor_state_ground;
-
-my_state_ground = function(){actor_state_ground()}
-my_state_air = function(){actor_state_air()}
-my_state_crouch = function(){}
-my_state_slide = function(){}
-my_state_skid = function(){}
-
 horizontal_move = true;
 vertical_move = true;
 
-active_state = my_state_ground;
+fsm = new SnowState("actor_idle");
+
+fsm
+.event_set_default_function("draw", function() {
+	// Draw this no matter what state we are in
+	// (Unless it is overridden, ofcourse)
+	draw_sprite_ext(sprite_index, image_index, x, y, xscale, image_yscale, image_angle, image_blend, image_alpha);
+})
+.add("actor_idle",{
+	
+})
+
+.add("actor_walk",{
+	enter: function()
+	{
+		default_stats();
+		multijump_current = global.multijump_max;
+		dash_count_current = dash_count_max;
+	},
+	step: function()
+	{
+
+	
+		if (!on_vertical) 
+		{
+			fsm.change("actor air");
+		}
+		
+		wall_dir = facing;
+	}
+})

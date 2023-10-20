@@ -2,14 +2,14 @@
 #macro gravity_current (gravity_standard * gravity_multiplier)
 #macro friction_stadard 0.8
 #macro friction_current (friction_stadard * friction_multiplier)
-#macro coyote_time_frames 1 << 6
+#macro coyote_time_frames 6
 #macro terminal_velocity 10
 #macro C_SLOPE_ATTRACT_RANGE 4
 #macro C_ON_HORIZONTAL_FRAMES 6
 #macro C_ON_VERTICAL_FRAMES 8
 #macro C_ON_WALL_FRICTION 0.3
 #macro C_VARIABLE_JUMP_FRICTION 0.6
-#macro jump_buffer_frames 1 << 15 // uses binary counter
+#macro jump_buffer_frames 15
 #macro C_COLLISION_ONE_WAY_BUFFER 1
 #macro C_COLLISION_ONE_WAY_MOVE 2
 

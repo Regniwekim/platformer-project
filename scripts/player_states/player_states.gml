@@ -62,7 +62,7 @@ function player_state_ground()
 		}
 	}
 
-
+	can_jump = coyote_time_frames;
 	player_jump_ground();	
 	player_input_jump();	
 	player_input_ladder();	

@@ -6,12 +6,7 @@
     {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,},
   ],
   "managed": true,
-  "overriddenProperties": [
-    {"resourceType":"GMOverriddenProperty","resourceVersion":"1.0","name":"","objectId":{"name":"par_collider","path":"objects/par_collider/par_collider.yy",},"propertyId":{"name":"collide_right","path":"objects/par_collider/par_collider.yy",},"value":"collide_right_slope",},
-    {"resourceType":"GMOverriddenProperty","resourceVersion":"1.0","name":"","objectId":{"name":"par_collider","path":"objects/par_collider/par_collider.yy",},"propertyId":{"name":"collide_left","path":"objects/par_collider/par_collider.yy",},"value":"collide_left_slope",},
-    {"resourceType":"GMOverriddenProperty","resourceVersion":"1.0","name":"","objectId":{"name":"par_collider","path":"objects/par_collider/par_collider.yy",},"propertyId":{"name":"collide_top","path":"objects/par_collider/par_collider.yy",},"value":"collide_top_slope",},
-    {"resourceType":"GMOverriddenProperty","resourceVersion":"1.0","name":"","objectId":{"name":"par_collider","path":"objects/par_collider/par_collider.yy",},"propertyId":{"name":"collide_bottom","path":"objects/par_collider/par_collider.yy",},"value":"collide_bottom_slope",},
-  ],
+  "overriddenProperties": [],
   "parent": {
     "name": "Parents",
     "path": "folders/Objects/Colliders/Parents.yy",

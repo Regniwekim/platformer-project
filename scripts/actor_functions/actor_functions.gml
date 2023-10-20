@@ -1,4 +1,4 @@
-function platformer_event_tick(_tick)
+function actor_event_tick(_tick)
 {
 	// Counters
 	jump_buffer = jump_buffer >> 1;
@@ -13,7 +13,7 @@ function platformer_event_tick(_tick)
 	if (horizontal_move) x_vel_current = approach(x_vel_current,walk_speed_current*resistance_current*x_input,acceleration_current*resistance_current*global.time_dilation_current);
 	if (vertical_move) y_vel_current = approach(y_vel_current,terminal_velocity*resistance_current,gravity_current*resistance_current*global.time_dilation_current);
 	// Execute states
-	active_state();
+	fsm.step();
 	move_collide_state(x_vel_current * _tick, y_vel_current * _tick);
 }
 
@@ -205,4 +205,3 @@ function actor_jump_wall()
 		set_state(actor_state_air);
 	}	
 }
-

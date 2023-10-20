@@ -4,12 +4,7 @@
   "name": "obj_oneway",
   "eventList": [],
   "managed": true,
-  "overriddenProperties": [
-    {"resourceType":"GMOverriddenProperty","resourceVersion":"1.0","name":"","objectId":{"name":"par_collider","path":"objects/par_collider/par_collider.yy",},"propertyId":{"name":"collide_right","path":"objects/par_collider/par_collider.yy",},"value":"collide_none",},
-    {"resourceType":"GMOverriddenProperty","resourceVersion":"1.0","name":"","objectId":{"name":"par_collider","path":"objects/par_collider/par_collider.yy",},"propertyId":{"name":"collide_left","path":"objects/par_collider/par_collider.yy",},"value":"collide_none",},
-    {"resourceType":"GMOverriddenProperty","resourceVersion":"1.0","name":"","objectId":{"name":"par_collider","path":"objects/par_collider/par_collider.yy",},"propertyId":{"name":"collide_top","path":"objects/par_collider/par_collider.yy",},"value":"collide_none",},
-    {"resourceType":"GMOverriddenProperty","resourceVersion":"1.0","name":"","objectId":{"name":"par_collider","path":"objects/par_collider/par_collider.yy",},"propertyId":{"name":"collide_bottom","path":"objects/par_collider/par_collider.yy",},"value":"collide_bottom_one_way_platform",},
-  ],
+  "overriddenProperties": [],
   "parent": {
     "name": "Parents",
     "path": "folders/Objects/Colliders/Parents.yy",
