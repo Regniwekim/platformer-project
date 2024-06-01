@@ -1,63 +1,130 @@
 event_inherited();
 
 step_size = (sprite_get_width(sprite_index)/image_number)*2;
-facing = sign(image_xscale);
 xscale = image_xscale;
-wall_dir = facing;
+blink = 0;
+facing = sign(image_xscale);
 xinput = 0;
 yinput = 0;
-jump_input = 0;
-attack_input = 0;
 x_vel_current = 0;
 y_vel_current = 0;
-walk_speeed_multiplier = 1;
+
+walk_speed_multiplier = 1;
 acceleration_multiplier = 1;
 braking_multiplier = 1;
 friction_multiplier = 1;
-gravity_multipler = 1;
+gravity_multiplier = 1;
 resistance_multiplier = 1;
-jump_height_multiplier = 1;
-wall_stick_current = 0;
-jump_buffer = 0;
-multijump_current = 0;
-wall_dir = 0;
-can_jump = coyote_time_frames;
+
 walk_speed_current = walk_speed_standard;
 acceleration_current = acceleration_standard;
 resistance_current = resistance_standard;
-jump_height_current = jump_height_standard;
+
+sprites = {};
+xscale = 1;
+yscale = 1;
 
 horizontal_move = true;
 vertical_move = true;
 
+/*
 fsm = new SnowState("actor_idle");
 
 fsm
 .event_set_default_function("draw", function() {
 	// Draw this no matter what state we are in
 	// (Unless it is overridden, ofcourse)
-	draw_sprite_ext(sprite_index, image_index, x, y, xscale, image_yscale, image_angle, image_blend, image_alpha);
-})
-.add("actor_idle",{
-	
+	draw_sprite_ext(sprite_index, image_index, x, y, xscale, yscale, image_angle, image_blend, image_alpha);
 })
 
-.add("actor_walk",{
+.event_set_default_function("enter", function() {
+	default_stats();
+	//get_sprite(); //grab the sprite based on the state we entered
+})
+
+.add("actor_idle",{	
 	enter: function()
 	{
-		default_stats();
-		multijump_current = global.multijump_max;
-		dash_count_current = dash_count_max;
+		fsm.inherit();
+		x_vel_current = 0;	
 	},
 	step: function()
 	{
+		if (xinput != 0) fsm.change("actor_walk");
+		if (!on_vertical) fsm.change("actor_air");
+	}
+})
 
-	
-		if (!on_vertical) 
+.add("actor_walk",{
+	step: function()
+	{
+		if (xinput == 0) fsm.change("actor_idle");	
+		if (!on_vertical) fsm.change("actor_air");
+	}
+})
+
+.add("actor_air", {
+	enter: function()
+	{
+		fsm.inherit();
+		resistance_multiplier = resistance_air;
+	},
+	step: function()
+	{
+		if (on_vertical)
 		{
-			fsm.change("actor air");
+			if (xinput != 0)
+			{
+				fsm.change("actor_walk");
+			} else
+			{
+				if (y_vel_current > terminal_velocity/2)
+				{
+					fsm.change("actor_land");
+				} else
+				{
+					fsm.change("actor_idle");
+				}
+			}
 		}
+	}
+})
+
+.add("actor_land", {
+	enter: function()
+	{
+		fsm.inherit();
+		horizontal_move = false;
+	},
+	step: function()
+	{
+		if (animation_end())
+		{
+			if (xinput != 0) {
+				fsm.change("actor_walk");	
+			} else
+			{
+				fsm.change("actor_idle");	
+			}
+		}
+	}
+})
+
+.add_child("actor_land","actor_hurt", {
+	enter: function()
+	{
+		fsm.inherit();
 		
-		wall_dir = facing;
+	},
+	step: function()
+	{
+		fsm.inherit();
+		blink++;
+	},
+	
+	draw: function()
+	{
+		fsm.inherit();
+		//some kind of flashing or blinking thingie?
 	}
 })

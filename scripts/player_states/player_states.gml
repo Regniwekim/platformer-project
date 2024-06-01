@@ -3,6 +3,7 @@
 function player_state_ground()
 {	
 	
+	/*
 	if (input_check("run"))
 	{
 		walk_speed_multiplier = run_multiplier;
@@ -10,6 +11,7 @@ function player_state_ground()
 	{
 		walk_speed_multiplier = 1;
 	}
+	*/
 	
 	if (input_check("down"))
 	{
@@ -22,12 +24,13 @@ function player_state_ground()
 		}
 	}
 	
-	if (animation_end() && (sprite_index = spr_land || sprite_index = spr_roll))
+	if ((sprite_index = spr_land && (animation_end() || abs(x_vel_current) > walk_speed_standard/2)) || (sprite_index = spr_roll && animation_end()))
 	{
 		if (xinput != 0)
 		{
 			set_sprite(spr_walk,,abs(x_vel_current)/step_size);
-		} else 
+		}
+		else 
 		{
 			set_sprite(spr_idle,true,0.5);
 		}
@@ -69,6 +72,17 @@ function player_state_ground()
 	player_input_grapple();
 	horizontal_movement();	
 	vertical_movement();
+	
+	if (input_check_pressed("attack"))
+	{
+		set_state(player_state_attack1);	
+	}
+	
+	if ((xinput = 1 && place_meeting(bbox_right+1,bbox_top,par_collider)) || (xinput = -1 && place_meeting(bbox_left-1,bbox_top,par_collider)))
+	{
+		push_dir = xinput;
+		set_state(player_state_push);
+	}
 	
 	if (!on_ground()) set_state(player_state_air);
 	
@@ -127,6 +141,8 @@ function player_state_jump()
 	
 	player_input_grapple();
 	
+	player_input_ledge_grab()
+	
 	horizontal_movement();
 	
 	vertical_movement();	
@@ -155,6 +171,8 @@ function player_state_air()
 	player_input_grapple();
 	
 	player_input_ladder();
+	
+	player_input_ledge_grab()
 	
 	horizontal_movement();
 	
@@ -204,6 +222,8 @@ function player_state_glide()
 	
 	player_input_ladder();
 	
+	player_input_ledge_grab()
+	
 	horizontal_movement();
 	
 	vertical_movement();
@@ -236,11 +256,13 @@ function player_state_cling()
 	
 	if (sticky_current <= 0) set_state(player_state_air);
 	
-	player_jump_ground()
+	player_jump_ground();
 	
 	player_input_grapple();
 	
-	vertical_movement();	
+	player_input_ledge_grab()
+	
+	vertical_movement();
 	
 	if (on_ground()) {
 		facing = -facing;
@@ -286,6 +308,8 @@ function player_state_wallclimb()
 	player_jump_ground()
 	
 	player_input_grapple();	
+	
+	player_input_ledge_grab()
 	
 	if (on_ground()) {
 		facing = -facing;
@@ -375,20 +399,21 @@ function player_state_grapple()
 	var _val = animcurve_channel_evaluate(_channel,(1-(chain_length/max_chain_length))*(max_chain_length/grapple_distance_max));
 	
 	
-	if (on_ground()) chain_length--;
+	//if (on_ground()) chain_length--;
 		
-	chain_x = grapple_hook.x + lengthdir_x(chain_length,chain_direction);
-	chain_y = grapple_hook.y + lengthdir_y(chain_length,chain_direction);
+	
 	
 	if (input_check_pressed("grapple"))
 	{
-		max_chain_length = chain_length;	
+		max_chain_length = chain_length;
 	}
+	
 	if (input_check("grapple_reel"))
 	{
 		grapple_reel_active = true;
 		chain_length = approach(chain_length,0,_val);//clamp(chain_length+yinput * 3,0,grapple_distance_max); //approach(chain_length,32,(1/chain_length)*max_chain_length*y_vel_max*1.5)	
-	} else
+	}
+	else
 	{
 		_chain_angle_acceleration += xinput * 0.1;
 		chain_angle_velocity += _chain_angle_acceleration;
@@ -396,8 +421,11 @@ function player_state_grapple()
 		chain_angle_velocity *= 0.99;
 	}
 	
-	x_vel_current = clamp(chain_x - x,-x_vel_max*2,x_vel_max*2);
-	y_vel_current = clamp(chain_y - y,-y_vel_max*2,y_vel_max*2);
+	chain_x = grapple_hook.x + lengthdir_x(chain_length,chain_direction);
+	chain_y = grapple_hook.y + lengthdir_y(chain_length,chain_direction);
+	
+	x_vel_current = clamp(chain_x - x,-y_vel_max,y_vel_max);
+	y_vel_current = clamp(chain_y - y,-y_vel_max,y_vel_max);
 	
 	if (chain_length <= 1)
 	{
@@ -411,7 +439,15 @@ function player_state_grapple()
 	}
 	
 	if (!input_check("grapple") || (!input_check("grapple_reel") && grapple_reel_active && chain_length > 1)) {
-		set_state(player_state_air);
+		if (on_ground())
+		{
+			set_state(player_state_ground);
+		}
+		else
+		{
+			set_state(player_state_air);
+		}
+		
 	}
 	
 		
@@ -420,6 +456,8 @@ function player_state_grapple()
 	player_input_wallcling();
 	
 	player_input_wallclimb();
+	
+	player_input_ledge_grab()
 	
 	player_input_ladder();
 	
@@ -436,6 +474,8 @@ function player_state_dash()
 	
 	player_input_wallclimb();
 	
+	player_input_ledge_grab()
+	
 	if (dash_timer_current <= 0) {
 		if (on_ground()) {
 			set_state(player_state_ground)
@@ -449,4 +489,162 @@ function player_state_dash_targeting()
 {
 	default_stats();
 	set_sprite(sprite_index,false,min(image_speed,global.time_dilation_current));
+}
+
+function player_state_push()
+{
+	if (xinput = 0)
+	{
+		set_sprite(spr_player_push_idle,true,0.5);	
+	}
+	else if (xinput = push_dir)
+	{
+		set_sprite(spr_player_push,true,0.5);
+	}
+	else if (xinput = -push_dir)
+	{
+		set_state(player_state_ground);	
+	}
+	
+	can_jump = coyote_time_frames;
+	player_jump_ground();	
+	player_input_jump();	
+	player_input_ladder();	
+	player_input_grapple();
+	horizontal_movement();	
+	vertical_movement();
+	
+	if (input_check("down"))
+	{
+		set_state(player_state_crouch);	
+	}
+	
+	if (!on_ground()) set_state(player_state_air);
+}
+
+function player_state_ledge_grab()
+{
+	if animation_end() image_speed = 0;
+	
+	var _block = instance_place(x+facing,y,par_collider);
+	
+	if (wall_dir ? place_meeting(bbox_right+1,bbox_top,par_collider) : place_meeting(bbox_left-1,bbox_top,par_collider))
+	{
+		y_vel_current = 0;
+		set_sprite(spr_player_ledge_climb,true,0.5);
+		if (image_index >= 1)
+		{
+			image_index = 1;
+			image_speed = 0;
+		}
+		if (input_check_pressed("jump")) 
+		{
+			if (xinput == wall_dir)
+			{
+			set_state(player_state_ledge_climb);
+			} else
+			{
+				x_vel_current = jump_height_current*-wall_dir*0.75;
+				y_vel_current = -jump_height_current;
+				wall_dir = -wall_dir;
+				set_state(player_state_jump);
+			}
+		}
+	}
+	else
+	{
+		if (input_check_pressed("jump"))
+		{
+			x_vel_current = jump_height_current*-wall_dir*0.75;
+			y_vel_current = -jump_height_current;
+			wall_dir = -wall_dir;
+			set_state(player_state_jump);
+		}
+		if (y_vel_current < 0) y_vel_current *= 0.85;
+		if (y_vel_current > y_vel_max * gravity_multiplier) y_vel_current = approach(y_vel_current,y_vel_max * gravity_multiplier * global.time_dilation_current, gravity_current * 2 * global.time_dilation_current);
+		vertical_movement();
+	}
+	
+	if ((place_meeting(bbox_left-1,y,par_collider) && input_check("right")) || (place_meeting(bbox_right+1,y,par_collider) && input_check("left")) || (!place_meeting(bbox_left-1,y,par_collider) && !place_meeting(bbox_right+1,y,par_collider)))
+	{
+		sticky_current--;	
+	}
+	else
+	{
+		sticky_current = sticky_max;	
+	}
+	
+	if (sticky_current <= 0) set_state(player_state_air);
+	
+	player_jump_ground();
+	
+	player_input_grapple();
+	
+	if (on_ground()) {
+		facing = -facing;
+		set_state(player_state_ground);
+	}
+}
+
+function player_state_ledge_climb()
+{
+	if animation_end() 
+	{
+		if (sprite_index = spr_player_ledge_climb) {
+			var _block = instance_place(x+facing,y,par_collider);
+			if (_block != noone)
+			{
+				y = _block.bbox_top;
+			}
+			x += facing * 13;
+			set_sprite(spr_player_stand,true,0.5);
+		}
+		else
+		{
+			set_state(player_state_ground);
+		}
+	}
+}
+
+function player_state_attack1()
+{
+	x_vel_current *= 0.9;
+	
+	if (image_index == 1)
+	{
+		instance_create_depth(x + (facing*8),y,depth+1,obj_hurtbox,
+		{
+			team : 0,
+			xscale : facing,
+			sprite : spr_player_punch1hb
+		});	
+	}
+	
+	if (image_index >= 3 && image_index < image_number-1 && input_check_pressed("attack"))
+	{
+		set_state(player_state_attack2);	
+	}
+	
+	if (image_index >= image_number-1)
+	{
+		set_state(player_state_ground);	
+	}
+}
+
+function player_state_attack2()
+{
+	if (image_index == 1)
+	{
+		instance_create_depth(x + (facing*8),y,depth+1,obj_hurtbox,
+		{
+			team : 0,
+			xscale : facing,
+			sprite : spr_player_punch2hb
+		});	
+	}
+	
+	if (image_index >= image_number-1)
+	{
+		set_state(player_state_ground);	
+	}
 }

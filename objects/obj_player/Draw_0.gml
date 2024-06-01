@@ -1,7 +1,5 @@
-/// @description Insert description here
-// You can write your code in this editor
-
-draw_sprite_ext(sprite_index,image_index,x,y,xscale,image_yscale,image_angle,image_blend,image_alpha);
+/// @description
+draw_sprite_ext(sprite_index,image_index,x,y,xscale,yscale,image_angle,image_blend,image_alpha);
 
 if (global.debug)
 {
@@ -20,6 +18,11 @@ draw_circle(input_cursor_x(),input_cursor_y(),8,true);
 if (state = player_state_glide) {
 	var _h = sprite_get_height(sprite_index);
 	draw_sprite(spr_glider,0,x,y-_h);
+}
+
+if (draw_crosshair)
+{
+	draw_sprite_ext(spr_crosshair,0,crosshair_x,crosshair_y,crosshair_size,crosshair_size,crosshair_angle,image_blend,image_alpha);	
 }
 
 draw_set_colour(c_white);

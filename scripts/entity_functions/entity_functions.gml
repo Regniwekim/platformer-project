@@ -35,7 +35,9 @@ function entity_move_collide(_velocity_x, _velocity_y)
 		
 		// If a collision was resolved then set vertical collision direction
 		if (_resolved_y != y)
-			on_vertical = sign(_velocity_y) * C_ON_VERTICAL_FRAMES;
+		{
+			on_vertical = sign(_velocity_y)// * C_ON_VERTICAL_FRAMES;
+		}
 		
 		y = _resolved_y;
 	}
@@ -63,7 +65,9 @@ function entity_move_collide(_velocity_x, _velocity_y)
 		
 		// If a collision was resolved then set horizontal collision direction
 		if (x != _resolved_x)
-			on_horizontal = sign(_velocity_x) * C_ON_HORIZONTAL_FRAMES;
+		{
+			on_horizontal = sign(_velocity_x)// * C_ON_HORIZONTAL_FRAMES;
+		}
 			
 		x = _resolved_x;
 	}

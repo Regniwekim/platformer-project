@@ -1,3 +1,4 @@
+
 #region Camera stuff
 camera_current_x = camera_get_view_x(view);
 camera_current_y = camera_get_view_y(view);

@@ -55,14 +55,72 @@ function in_view(_buffer = TILE_SIZE)
 function init_sprites()
 {
 	var _i = 0;
-	repeat(argument_count)
+	repeat(argument_count div 2)
 	{
-		sprites[$ argument[_i]] = asset_get_index("spr_"+ argument[_i]);
-		_i++;
+		sprites[$ argument[_i]] = argument[_i+1];
+		_i+=2;
 	}
 }
 
 function get_sprite()
 {
-	return sprites[$ fsm.get_current_state()];	
+	return asset_get_index(sprites[fsm.get_current_state()]);	
+}
+
+function collision_line_point(_x1, _y1, _x2, _y2, _obj, _prec, _notme)
+{
+	var _rr = collision_line(_x1, _x2, _y1, _y2, _obj, _prec, _notme);
+	var _rx = _x2;
+	var _ry = _y2;
+	if (_rr != noone)
+	{
+		var _p0 = 0;
+		var _p1 = 1;
+		repeat(ceil(log2(point_distance(_x1,_y1,_x2,_y2))) + 1)
+		{
+			var _np = _p0 + (_p1 - _p0) * 0.5;
+			var _nx = _x1 + (_x2 - _x1) * _np;
+			var _ny = _y1 + (_y2 - _y1) * _np;
+			var _px = _x1 + (_x2 - _x1) * _p0;
+			var _py = _y1 + (_y2 - _y1) * _p0;
+			var _nr = collision_line(_px, _py, _nx, _ny, _obj, _prec, _notme);
+			if (_nr != noone)
+			{
+				_rr = _nr;
+				_rx = _nx;
+				_ry = _ny;
+				_p1 = _np;
+			}
+			else
+			{
+				_p0 = _np;	
+			}
+		}
+	}
+	var _r = [_rr,_rx,_ry];
+	//_r[0] = _rr;
+	//_r[1] = _rx;
+	//_r[2] = _ry;
+	return _r;
+}
+
+function raycast(_startx, _starty, _endx, _endy, _target)
+{
+	var _len = 0;
+	var _dir = point_direction(_startx, _starty, _endx, _endy);
+	var _max = point_direction(_startx, _starty, _endx, _endy);
+	var _rc = [0,0];
+	while (_len < _max)
+	{
+		var _castx = _startx + lengthdir_x(_len, _dir);
+		var _casty = _starty + lengthdir_y(_len, _dir);
+		if (collision_point(_castx, _casty, _target, false, false))
+		{
+			_rc[0] = _castx;
+			_rc[1] = _casty;
+			return _rc;
+		}
+		_len++;
+	}
+	return false;
 }

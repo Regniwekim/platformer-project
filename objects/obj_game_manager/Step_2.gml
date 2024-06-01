@@ -114,21 +114,21 @@ if (collision_line(obj_player.x,camera_current_y,obj_player.x,camera_current_y+g
 		}
 		if (instance_exists(_camera_zone_up) && obj_player.bbox_top > _camera_zone_up.bbox_bottom) {
 			camera_target_y = clamp(
-			obj_player.y - (global.view_height/2),
+			obj_player.y - (global.view_height/2) + global.look_offset + global.ledge_offset,
 			max(0,_camera_zone_up.bbox_bottom - TILE_SIZE),
 			room_height-global.view_height);
 		}else if (instance_exists(_camera_zone_down) && obj_player.bbox_bottom < _camera_zone_down.bbox_top) {
 			camera_target_y = clamp(
-			obj_player.y - (global.view_height/2),
+			obj_player.y - (global.view_height/2) + global.look_offset + global.ledge_offset,
 			0, max(0,_camera_zone_down.bbox_bottom - TILE_SIZE)-global.view_height);
 		} else {
-			camera_target_y = clamp(obj_player.y - (global.view_height/2), -TILE_SIZE, room_height-global.view_height);
+			camera_target_y = clamp(obj_player.y - (global.view_height/2) + global.look_offset + global.ledge_offset, 0, room_height-global.view_height);
 		}
 	} else {
-		camera_target_y = clamp(obj_player.y - (global.view_height/2), -TILE_SIZE, room_height-global.view_height);
+		camera_target_y = clamp(obj_player.y - (global.view_height/2) + global.look_offset + global.ledge_offset, 0, room_height-global.view_height);
 	}
 } else {
-	camera_target_y = clamp(obj_player.y - (global.view_height/2), -TILE_SIZE, room_height-global.view_height);
+	camera_target_y = clamp(obj_player.y - (global.view_height/2) + global.look_offset + global.ledge_offset, 0, room_height-global.view_height);
 	ds_list_destroy(_camera_zone_y_list);
 }
 #endregion

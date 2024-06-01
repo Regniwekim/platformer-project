@@ -1,20 +1,29 @@
 function actor_event_tick(_tick)
 {
-	// Counters
-	jump_buffer = jump_buffer >> 1;
-	can_jump = can_jump >> 1;
-	
 	xinput = input_right-input_left;
 	yinput = input_down-input_up;
+	
 	acceleration_current = acceleration_standard*acceleration_multiplier;
 	resistance_current = resistance_ground*resistance_multiplier;
 	jump_height_current = jump_height_standard*jump_height_multiplier;
 	walk_speed_current = walk_speed_standard*walk_speed_multiplier*resistance_current;
-	if (horizontal_move) x_vel_current = approach(x_vel_current,walk_speed_current*resistance_current*x_input,acceleration_current*resistance_current*global.time_dilation_current);
-	if (vertical_move) y_vel_current = approach(y_vel_current,terminal_velocity*resistance_current,gravity_current*resistance_current*global.time_dilation_current);
-	// Execute states
-	fsm.step();
+	
+	if (horizontal_move) x_vel_current = approach(x_vel_current,walk_speed_current*resistance_current*xinput*global.time_dilation_current,acceleration_current*resistance_current*global.time_dilation_current);
+	if (vertical_move) y_vel_current = approach(y_vel_current,terminal_velocity*resistance_current*global.time_dilation_current,gravity_current*resistance_current*global.time_dilation_current);
+	
+	if (xinput != 0)
+	{
+		facing = xinput;	
+	}
+	xscale = lerp(xscale,sign(facing),0.5);
+	yscale = lerp(yscale,sign(yscale),0.5);
+	
 	move_collide_state(x_vel_current * _tick, y_vel_current * _tick);
+}
+
+function on_ledge()
+{
+	return (facing ? (!position_meeting(bbox_right,bbox_bottom+TILE_SIZE,par_collider)) : (!position_meeting(bbox_left,bbox_bottom+TILE_SIZE,par_collider)));
 }
 
 function actor_state_ground()

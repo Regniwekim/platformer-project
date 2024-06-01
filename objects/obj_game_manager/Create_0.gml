@@ -31,7 +31,9 @@ camera_target_y = 0;
 camera_current_y = camera_get_view_y(view);
 camera_speed = 0.2;
 
-global.camera_follow = 0;
+global.camera_follow = noone;
+global.look_offset = 0;
+global.ledge_offset = 0;
 global.screen_shake = 0;
 
 camera_set_view_pos(view,camera_target_x,camera_target_y);

@@ -40,11 +40,29 @@ if (active) {
 		facing = xinput;
 	}
 	
-	xscale = approach(xscale,facing,0.5);
+	xscale = approach(xscale,facing,0.4);
+	yscale = approach(yscale,1,0.1);
 	
 	step_size = (sprite_get_width(sprite_index)/image_number)*2;
+	
+	if (on_vertical) {
+		global.look_offset = yinput * TILE_SIZE * 2;	
+	}
+	else
+	{
+		global.look_offset = 0;	
+	}
+	
+	if (on_ground())
+	{
+		var _stored_mask = mask_index;
+		mask_index = sprite_index;
+		global.ledge_offset = on_ledge() * TILE_SIZE * 2;
+		mask_index = _stored_mask;
+	}
 
 	state();
 	
+	//entity_move_collide(x_vel_current,y_vel_current);
 	actor_collision();
 }

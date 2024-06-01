@@ -7,11 +7,16 @@ global.time_dilation_current = lerp(global.time_dilation_current,global.time_dil
 
 #region camera control
 
-if (instance_exists(obj_player) 
-&& global.camera_follow != obj_player 
-&& rectangle_in_rectangle(obj_player.bbox_left,obj_player.bbox_top,obj_player.bbox_right,obj_player.bbox_bottom,
-global.camera_follow.bbox_left-2,global.camera_follow.bbox_top-2,global.camera_follow.bbox_right+2,global.camera_follow.bbox_bottom+2) != 1) {
-	global.camera_follow = obj_player;		
+if (instance_exists(obj_player))
+{
+	if (!instance_exists(global.camera_follow)) {
+		global.camera_follow = obj_player;
+	}
+	else if global.camera_follow != obj_player &&
+	rectangle_in_rectangle(obj_player.bbox_left,obj_player.bbox_top,obj_player.bbox_right,obj_player.bbox_bottom,
+	global.camera_follow.bbox_left-2,global.camera_follow.bbox_top-2,global.camera_follow.bbox_right+2,global.camera_follow.bbox_bottom+2) != 1 {
+		global.camera_follow = obj_player;
+	}
 }
 
 global.screen_shake = approach(global.screen_shake,0,max(0.05,global.screen_shake/10));

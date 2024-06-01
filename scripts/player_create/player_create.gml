@@ -1,10 +1,10 @@
 function player_create() {
 spr_idle = spr_player_idle;
-spr_jump = spr_player_jump;
+spr_jump = spr_player_air;
 spr_fall = spr_player_fall;
 spr_air_jump = spr_player_air_jump;
 spr_glide = spr_player_air_jump;
-spr_ladder = spr_player_jump;
+spr_ladder = spr_player_air;
 spr_slide = spr_player_slide;
 spr_skid = spr_player_skid;
 spr_walk = spr_player_walk;
@@ -16,6 +16,7 @@ spr_wall_land = spr_player_wall_land;
 spr_wall_climb = spr_player_wall_climb;
 spr_crouch_idle = spr_player_crouch_idle;
 spr_crouch_walk = spr_player_crouch_walk;
+state_mask = spr_player_mask_stand;
 
 //number of pixels covered per step divided by the number of frames per step = pixels moved per frame at image_speed = 1
 step_size = (sprite_get_width(sprite_index)/image_number)*2;
@@ -93,11 +94,12 @@ echo_frame = image_index;
 echo_facing = facing;
 
 xscale = image_xscale;
+yscale = 1;
 
 grapple_hook = noone;
-grapple_point = noone;
+grapple_point = [noone,x,y];
 grapple_direction = 0;
-grapple_distance_max = 320;
+grapple_distance_max = 280;
 chain_length = 0;
 max_chain_length = 0;
 chain_direction = 0;
@@ -114,6 +116,15 @@ dash_distance_max = 120;
 dash_targeting = false;
 dash_point = noone;
 dash_speed = 15;
+
+push_dir = 1;
+on_ledge = 0;
+
+draw_crosshair = false;
+crosshair_x = x;
+crosshair_y = y;
+crosshair_size = 1;
+crosshair_angle = 0;
 
 climbing_speed = 4;
 

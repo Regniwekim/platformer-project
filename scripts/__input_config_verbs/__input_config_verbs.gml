@@ -19,8 +19,9 @@ return {
 		
 		//in game verbs
 		jump: input_binding_key(vk_space),
-		grapple: input_binding_mouse_button(mb_left),
-		grapple_reel: input_binding_mouse_button(mb_right),
+		attack: input_binding_mouse_button(mb_left),
+		grapple: input_binding_mouse_button(mb_right),
+		grapple_reel: input_binding_key(vk_shift),
 		glide: input_binding_key("Q"),
 		run: input_binding_key(vk_shift),
 		pause: input_binding_key(vk_escape),
@@ -40,7 +41,8 @@ return {
         
         //in game verbs
 		jump:  input_binding_gamepad_button(gp_face1),
-		run:  input_binding_gamepad_button(gp_face3),
+		attack: input_binding_gamepad_button(gp_face3),
+		//run:  input_binding_gamepad_button(gp_face3),
 		glide:  input_binding_gamepad_button(gp_shoulderl),
 		grapple:  input_binding_gamepad_button(gp_shoulderr),
 		grapple_reel:  input_binding_gamepad_button(gp_shoulderrb),
@@ -49,7 +51,6 @@ return {
         aim_down:  input_binding_gamepad_axis(gp_axislv, false),
         aim_left:  input_binding_gamepad_axis(gp_axislh, true),
         aim_right: input_binding_gamepad_axis(gp_axislh, false),
-		
 		
 		//menu verbs
 		accept:  input_binding_gamepad_button(gp_face1),
